@@ -1,4 +1,4 @@
-PyFinder
+pyFinder
 ========
 
 Questo pacchetto raccoglie una serie di script utili al GM nella sessione di gioco.
