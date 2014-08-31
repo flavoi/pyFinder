@@ -8,6 +8,8 @@
     @author: Flavio Marcato
 """
 
+import json
+
 
 """
     Un personaggio giocante. 
@@ -26,6 +28,18 @@ class PersonaggioGiocante:
     def add_punti_esperienza(punti):
     	self.punti_esperienza += punti
 
+    # Salva il persoanggio in base di dati
+    def save(self):
+    	
+    	with open('personaggi.json', 'r') as personaggi_correnti:
+    		personaggi = json.load(personaggi_correnti)
+    	
+    	personaggi.append(self.__dict__)
+
+    	with open('personaggi.json', 'wb') as personaggi_aggiornati:
+    		json.dump(personaggi, personaggi_aggiornati)
+
     # Stampa una rappresentazione minima del personaggio
     def __str__(self):
     	return u"%s" % self.nome_personaggio
+

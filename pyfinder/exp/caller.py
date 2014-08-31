@@ -9,7 +9,7 @@
     @author: Flavio Marcato
 """
 
-import sys
+import sys, json
 
 from pyfinder.exp.config import PersonaggioGiocante
 
@@ -21,7 +21,20 @@ def crea_nuovo_personaggio():
     nome_giocatore = raw_input("Inserisci il nome del giocatore: ")
     nome_personaggio = raw_input("Inserisci il nome del personaggio: ")
     personaggio = PersonaggioGiocante(nome_giocatore, nome_personaggio)
+    personaggio.save()
     return personaggio
+
+"""
+    Stampa tutti i personaggi salvati in base di dati.
+"""
+def stampa_personaggi():
+    with open('personaggi.json', 'r') as personaggi_correnti:
+        personaggi = json.load(personaggi_correnti)
+        for p in personaggi:
+            for key, value in p.iteritems():
+                print "%s: %s" % (key, value),
+                print "|",
+            print
 
 """
     Assegna i punti esperienza equamente tra tutti
@@ -49,8 +62,7 @@ def menu_start():
             print("\nPersonaggio %s creato con successo." % pg)
         
         elif ans == "2":
-            print "Funzionalita` in sviluppo."
-            pass
+            stampa_personaggi()
         
         elif ans == "e":
             print("\nCiao!") 
