@@ -13,6 +13,7 @@ import sys, json
 
 from pyfinder.exp.config import PersonaggioGiocante, Sfida
 
+
 """
     Inizializza personaggi di livello 1 con gli attributi
     di base.
@@ -24,29 +25,36 @@ def crea_nuovo_personaggio():
     personaggio.save()
     return personaggio
 
+
 """
     Stampa tutti i personaggi salvati in base di dati.
 """
 def print_personaggi():
     with open('personaggi.json', 'r') as personaggi_correnti:
         personaggi = json.load(personaggi_correnti)
-        for p in personaggi:
-            for key, value in p.iteritems():
-                print "%s: %s" % (key, value),
-                print "|",
+        for giocatore, personaggio in personaggi.iteritems():
+            print "%s | " % giocatore,
+            for key, value in personaggio.iteritems():
+                print "%s: %s | " % (key, value),
             print
 
 
 """
     Inizializza una nuova sfida nell'insieme dei potenziali
     punti esperieza.
+    In caso di sfide omogenee e` possibile specificare il parametro
+    numerosita` per moltiplicare automaticamente il punteggio.
 """
 def crea_nuova_sfida():
     nome_sfida = raw_input("Inserisci il nome della sfida: ")
     try:
         punti_esperienza = int(raw_input("Inserisci i punti esperienza: "))
+        numerosita = int(raw_input("Inserisci eventuale numerosita`: "))
+        if numerosita:
+            punti_esperienza = punti_esperienza * numerosita
     except ValueError:
-        print "I punti esperienza sono solo numeri interi."
+        print "Inserire solo numeri interi."
+
     sfida = Sfida(nome_sfida, punti_esperienza)
     return sfida
 
@@ -58,6 +66,35 @@ def stampa_sfide(sfide):
     for sfida in sfide:
         print sfida.print_sfida()
 
+
+"""
+    Prende in carico le sfide censite, calcola il totale di 
+    punti e li assegna ai personaggi in base di dati.
+    Per motivi filosofici le ricompense sono sempre distribuite
+    equamente tra i membri del gruppo.
+"""
+def assegna_punti_esperienza(sfide):
+    
+    # Calcola totale di punti
+    punti_esperienza_totali = 0
+    for sfida in sfide:
+        punti_esperienza_totali += sfida.punti_esperienza
+
+    # Carica i dati dei personaggi in formato lista di dizionari
+    with open('personaggi.json', 'r') as personaggi_correnti:
+        personaggi = json.load(personaggi_correnti)
+
+        # Caclola equamente le ricompense
+        punti_esperienza_a_testa = punti_esperienza_totali / len(personaggi)
+
+    # Mappa i dati da dizionario a istanze di classe
+    for personaggio in personaggi.iteritems():
+        personaggio_aggiornato = PersonaggioGiocante()
+        personaggio_aggiornato.update_from_dict(personaggio)
+        personaggio_aggiornato.add_punti_esperienza(punti_esperienza_a_testa)
+        personaggio_aggiornato.save()
+
+    return punti_esperienza_a_testa
 
 """
     Invoca il menu principale sulle funzionalita` supportate.
@@ -74,6 +111,7 @@ def menu_start():
         2. Stampa tutti i personaggi
         3. Crea una sfida
         4. Stampa tutte le sfide
+        5. Assegna punti esperienza
         e. Esci
         """)
         ans=raw_input("Quale attivita` vuoi fare? ") 
@@ -92,7 +130,11 @@ def menu_start():
 
         elif ans == "4":
             stampa_sfide(sfide)
-        
+
+        elif ans == "5":
+            pe = assegna_punti_esperienza(sfide)
+            print("\n%s punti esperienza per personaggio assegnati con successo." % pe)
+
         elif ans == "e":
             print("\nCiao!") 
             sys.exit(0)
