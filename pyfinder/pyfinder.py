@@ -14,10 +14,13 @@ import sys
 from os import chdir, system
 from os.path import basename as scriptname
 
-from config import BASE_DIR, INSTALLED_APPS
+from config import BASE_DIR, INSTALLED_APPS, COLORS
 
-def main():
-    requested_app = sys.argv[1]
+def print_welcome(appname):
+    print COLORS['header'] + "Applicazione '%s' attivata." % appname,
+    print COLORS['endc']
+
+def main(requested_app):
     if requested_app in INSTALLED_APPS:
         chdir(BASE_DIR.child(requested_app))
         system("python caller.py")
@@ -25,8 +28,10 @@ def main():
         print "Applicazione '%s' non installata." % requested_app
         sys.exit() 
 
+
 if __name__ == "__main__":
 
+    # Verifica parametri di ingresso
     try:
         if len(sys.argv) <= 1:
             raise ValueError("App supportate: %s" % [app for app in INSTALLED_APPS])
@@ -35,6 +40,11 @@ if __name__ == "__main__":
         print e
         sys.exit(1)
 
-    main()
+    # Messaggio di benvenuto
+    requested_app = sys.argv[1]
+    print_welcome(requested_app)
+
+    # Invocazione programmi
+    main(requested_app)
     
 
