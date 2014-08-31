@@ -11,7 +11,7 @@
 
 import sys, json
 
-from pyfinder.exp.config import PersonaggioGiocante
+from pyfinder.exp.config import PersonaggioGiocante, Sfida
 
 """
     Inizializza personaggi di livello 1 con gli attributi
@@ -27,7 +27,7 @@ def crea_nuovo_personaggio():
 """
     Stampa tutti i personaggi salvati in base di dati.
 """
-def stampa_personaggi():
+def print_personaggi():
     with open('personaggi.json', 'r') as personaggi_correnti:
         personaggi = json.load(personaggi_correnti)
         for p in personaggi:
@@ -36,12 +36,27 @@ def stampa_personaggi():
                 print "|",
             print
 
+
 """
-    Assegna i punti esperienza equamente tra tutti
-    i partecipanti.
+    Inizializza una nuova sfida nell'insieme dei potenziali
+    punti esperieza.
 """
-def divisione_comune():
-	pass
+def crea_nuova_sfida():
+    nome_sfida = raw_input("Inserisci il nome della sfida: ")
+    try:
+        punti_esperienza = int(raw_input("Inserisci i punti esperienza: "))
+    except ValueError:
+        print "I punti esperienza sono solo numeri interi."
+    sfida = Sfida(nome_sfida, punti_esperienza)
+    return sfida
+
+
+"""
+    Stampa tutte le sfide censite in questa sessione.
+"""
+def stampa_sfide(sfide):
+    for sfida in sfide:
+        print sfida.print_sfida()
 
 
 """
@@ -49,10 +64,16 @@ def divisione_comune():
 """
 def menu_start():
     ans = True
+
+    # L'elenco delle sfide e` memorizzato nella solas sessione corrente
+    sfide = []
+    
     while ans:
         print ("""
         1. Crea un nuovo personaggio
         2. Stampa tutti i personaggi
+        3. Crea una sfida
+        4. Stampa tutte le sfide
         e. Esci
         """)
         ans=raw_input("Quale attivita` vuoi fare? ") 
@@ -62,7 +83,15 @@ def menu_start():
             print("\nPersonaggio %s creato con successo." % pg)
         
         elif ans == "2":
-            stampa_personaggi()
+            print_personaggi()
+
+        elif ans == "3":
+            sf = crea_nuova_sfida()
+            sfide.append(sf)
+            print("\nSfida %s creata con successo." % sf)
+
+        elif ans == "4":
+            stampa_sfide(sfide)
         
         elif ans == "e":
             print("\nCiao!") 
