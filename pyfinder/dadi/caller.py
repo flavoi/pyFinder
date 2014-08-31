@@ -3,7 +3,7 @@
 
 """ 
     Programma invocazione dadi. Supporta potenzialmente
-    lanci personalizzati ma si basa su due parametri fondamentali:
+    lanci personalizzati e si basa su due parametri fondamentali:
     tipo di dado e bonus/malus.
 
     @author: Flavio Marcato
@@ -14,7 +14,8 @@ from random import randint
 from termcolor import colored
 
 from pyfinder.dadi.config import RARR, DADI
-from pyfinder.config import BCOLORS
+from pyfinder.config import COLORS
+
 
 """ 
     Calcolo del singolo lancio.
@@ -46,7 +47,8 @@ def main():
     try:
         
         # Lettura parametri
-        tipo_dado = raw_input('Tipo di dado: ')        
+        tipo_dado = raw_input('Tipo di dado: ')
+
         # Verifica tipo di dado
         if tipo_dado not in DADI:
             raise ValueError("Specificare un tipo di dado previsto. \n%s" % [dado for dado in DADI])
@@ -64,8 +66,8 @@ def main():
         for lancio in lanci:
             print "%s Tiro base: %s" % (RARR, lancio['faccia_del_dado']),
             print "| Bonus: %s" % lancio['bonus'],
-            print "| " + BCOLORS['okgreen'] + "Totale: %s" % lancio['totale'],
-            print BCOLORS['endc'] 
+            print "| " + COLORS['okgreen'] + "Totale: %s" % lancio['totale'],
+            print COLORS['endc'] 
 
     except ValueError, e:
         print "Richiamare lo script con i parametri corretti."
