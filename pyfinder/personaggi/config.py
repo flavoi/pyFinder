@@ -34,6 +34,7 @@ class PersonaggioGiocante:
         # Priorita` ai parametri da riga di comando
         self.nome_giocatore = nome_giocatore
         self.nome_personaggio = nome_personaggio
+        self.punti_esperienza = 0
         with open('personaggi.json', 'r+') as personaggi_correnti:
             personaggi = json.load(personaggi_correnti)
             # Allinea punti esperienza al gruppo
@@ -65,6 +66,6 @@ class PersonaggioGiocante:
             personaggi_correnti.write(json.dumps(personaggi, indent=2, sort_keys=True))
             personaggi_correnti.truncate() 
 
-    # Stampa una rappresentazione minima del personaggio
+    # Non dimentichiamoci che dietro ogni personaggio c'e` una persona vera :)
     def __str__(self):
-    	return u"%s" % self.nome_personaggio
+    	return u"%s" % self.nome_giocatore

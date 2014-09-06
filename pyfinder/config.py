@@ -11,6 +11,9 @@ from unipath import Path
 # Cartella principale del progetto
 BASE_DIR = Path(__file__).ancestor(1)
 
+# Simbolo freccia verso destra
+RARR = "\xe2\x9e\x9c"
+
 # Applicazioni installate
 INSTALLED_APPS = [
 	'dadi',

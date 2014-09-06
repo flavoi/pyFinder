@@ -8,9 +8,6 @@
     @author: Flavio Marcato
 """
 
-# Simbolo freccia verso destra
-RARR = "\xe2\x9e\x9c"
-
 # Dadi supportati
 DADI = [
     '2',
