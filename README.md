@@ -5,7 +5,7 @@ Questo pacchetto vuole essere un piccolo coltellino svizzero per organizzare le 
 
 **Funzionalità in cantiere**
 
-Per invocare lo script desiderato: ```python pyfinder.py <nome_app>```.
+Per invocare lo script desiderato: ```python pyfinder.py _nome_app_```.
 - [x] App _dadi_: simula il lancio dei classici dadi da gioco di ruolo, permettendo l'aggiunta di bonus, malus e ripetizioni. 
 - [ ] App _personaggi_: censisce e riporta le caratteristiche dei giocatori memorizzando i loro progressi.
 - [ ] App _exp_: dispensa punti esperienza in maniera equa nel gruppo tramite il controllo di sfide.
