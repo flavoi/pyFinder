@@ -14,7 +14,8 @@ BASE_DIR = Path(__file__).ancestor(1)
 # Applicazioni installate
 INSTALLED_APPS = [
 	'dadi',
-    'exp',
+    'personaggi',
+    'sfide',
 ]
 
 # Colori per la riga di comando
