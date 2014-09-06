@@ -3,7 +3,7 @@
 
 """
     Questo script raccoglie le configurazioni
-    per l'app 'personaggi'.
+    per l'app 'sfide'.
 
     @author: Flavio Marcato
 """
@@ -21,11 +21,15 @@ class Sfida:
         self.nome_sfida = nome_sfida
         self.punti_esperienza = punti_esperienza
 
+    # Accesso al nome della sfida
+    def get_nome_sfida(self):
+        return self.nome_sfida
 
-    def print_sfida(self):
-        return u"Nome sfida: %s | Valore sfida: %s" % (self.nome_sfida, self.punti_esperienza)
+    # Accesso ai punti esperienza della sfida
+    def get_punti_sfida(self):
+        return self.punti_esperienza
 
-    # Stampa una rappresentazione minima del personaggio
+    # La rappresentazione minima 
     def __str__(self):
         return u"%s" % self.nome_sfida
 

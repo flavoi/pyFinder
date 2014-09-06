@@ -9,8 +9,8 @@
     @author: Flavio Marcato
 """
 
-from os import chdir
-import sys, json
+import os, sys, json
+from prettytable import PrettyTable
 
 from pyfinder.config import BASE_DIR, COLORS, RARR
 from pyfinder.personaggi.config import PersonaggioGiocante
@@ -41,11 +41,17 @@ def crea_nuova_sfida():
     Stampa tutte le sfide censite in questa sessione.
 """
 def formatta_sfide(sfide):
+    # Registra i campi da esporre
+    tabella = PrettyTable(["Sfida", "Punti"])
+    tabella.align["Sfida"] = "l"
+    tabella.padding_width = 1
     if len(sfide) > 0:
         for sfida in sfide:
-            return sfida
+            riga = [sfida.get_nome_sfida(), sfida.get_punti_sfida()]
+            tabella.add_row(riga)
     else:
-        return COLORS['warning'] + "Nessuna sfida censita." + COLORS['endc'] 
+        tabella = COLORS['warning'] + "Nessuna sfida censita." + COLORS['endc']
+    return tabella
 
 """
     Prende in carico le sfide censite, calcola il totale di 
@@ -54,26 +60,23 @@ def formatta_sfide(sfide):
     equamente tra i membri del gruppo.
 """
 def assegna_punti_esperienza(sfide):
-    
     # Calcola totale di punti
     punti_esperienza_totali = 0
     for sfida in sfide:
         punti_esperienza_totali += sfida.punti_esperienza
-
     # Carica i dati dei personaggi in formato lista di dizionari
-    chdir(BASE_DIR.child('personaggi'))
+    os.chdir(BASE_DIR.child('personaggi'))
     with open('personaggi.json', 'r') as personaggi_correnti:
         personaggi = json.load(personaggi_correnti)
         # Calcola equamente le ricompense
         pe = punti_esperienza_totali / len(personaggi)
-
     # Mappa i dati da dizionario a istanze di PersonaggioGiocante
     for personaggio in personaggi.iteritems():
         personaggio_aggiornato = PersonaggioGiocante()
         personaggio_aggiornato.update_from_dict(personaggio)
         personaggio_aggiornato.add_punti_esperienza(pe)
         personaggio_aggiornato.save()
-
+    os.chdir(BASE_DIR.child('sfide'))
     return pe
 
 
