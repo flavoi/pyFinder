@@ -13,8 +13,8 @@ import sys
 from random import randint
 from termcolor import colored
 
-from pyfinder.dadi.config import RARR, DADI
-from pyfinder.config import COLORS
+from pyfinder.dadi.config import DADI
+from pyfinder.config import COLORS, RARR
 
 
 """ 
