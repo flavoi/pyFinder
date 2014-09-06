@@ -64,7 +64,7 @@ def assegna_punti_esperienza(sfide):
         # Calcola equamente le ricompense
         pe = punti_esperienza_totali / len(personaggi)
 
-    # Mappa i dati da dizionario a istanze di classe
+    # Mappa i dati da dizionario a istanze di PersonaggioGiocante
     for personaggio in personaggi.iteritems():
         personaggio_aggiornato = PersonaggioGiocante()
         personaggio_aggiornato.update_from_dict(personaggio)
