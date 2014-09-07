@@ -15,8 +15,7 @@ from pyfinder.personaggi.config import PersonaggioGiocante, get_group_exp
 
 
 """
-    Inizializza personaggi di livello 1 con gli attributi
-    di base.
+    Inizializza personaggi di livello 1 con gli attributi di base.
 """
 def crea_nuovo_personaggio():
     nome_giocatore = raw_input("Inserisci il nome del giocatore: ")
@@ -25,9 +24,8 @@ def crea_nuovo_personaggio():
     personaggio.save()
     return personaggio
 
-
 """
-    Estrae tutti i personaggi in una tabellas espondendo tutte le informazioni.
+    Estrae in una tabella tutti i personaggi censiti in base di dati.
 """
 def formatta_personaggi():
     # Registra i campi da esporre
@@ -45,31 +43,26 @@ def formatta_personaggi():
             tabella.add_row(riga)
     return tabella
             
-
-""" Invoca il menu` dell'app. """
+"""
+    Invoca menu` principale.
+"""
 def main():
-    
     ans = True
     while ans:
         print
         print "(1) Crea un nuovo personaggio\n(2) Stampa tutti i personaggi\n(e) Esci"
         ans=raw_input("Inserisci attivita` %s  " % RARR) 
-        
         if ans == "1": 
             pg = crea_nuovo_personaggio()
             print COLORS['okgreen'] + "Il Personaggio di %s e` stato creato con successo." % pg + COLORS['endc']
-        
         elif ans == "2":
             tabella_personaggi = formatta_personaggi()
             print tabella_personaggi
-
         elif ans == "e":
             print("Ciao!") 
             sys.exit(0)
-        
         else:
             print COLORS['warning'] + "La scelta non e` valida, riprova." + COLORS['endc']
-
 
 if __name__ == '__main__':
     main()
