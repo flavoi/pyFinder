@@ -47,6 +47,7 @@ class PersonaggioGiocante:
     def update_from_dict(self, data):
         self.nome_giocatore = data[0]
         self.nome_personaggio = data[1]['nome_personaggio']
+        self.punti_esperienza = data[1]['punti_esperienza']
 
     # Assegna punti esperienza al giocatore corrente
     def add_punti_esperienza(self, punti):
@@ -64,8 +65,8 @@ class PersonaggioGiocante:
             personaggi_correnti.seek(0)  
             # Aggiorna l'occorrenza appena preparata
             personaggi_correnti.write(json.dumps(personaggi, indent=2, sort_keys=True))
-            personaggi_correnti.truncate() 
+            personaggi_correnti.truncate()
 
-    # Non dimentichiamoci che dietro ogni personaggio c'e` una persona vera :)
+    # Dietro ogni personaggio c'e` una persona vera
     def __str__(self):
-    	return u"%s" % self.nome_giocatore
+    	return u"%s, pe: %s" % (self.nome_giocatore, self.punti_esperienza)

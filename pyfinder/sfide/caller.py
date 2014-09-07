@@ -32,13 +32,11 @@ def crea_nuova_sfida():
             punti_esperienza = punti_esperienza * numerosita
     except ValueError:
         print "Inserire solo numeri interi."
-
     sfida = Sfida(nome_sfida, punti_esperienza)
     return sfida
 
-
 """
-    Stampa tutte le sfide censite in questa sessione.
+    Estrae in una tabella tutte le sfide censite in questa sessione.
 """
 def formatta_sfide(sfide):
     # Registra i campi da esporre
@@ -80,13 +78,13 @@ def assegna_punti_esperienza(sfide):
     return pe
 
 
-""" Invoca il menu` dell'app. """
+"""
+    Invoca menu` principale.
+"""
 def main():
     ans = True
-
     # L'elenco delle sfide e` memorizzato nella solas sessione corrente
     sfide = []
-    
     while ans:
         print
         print ("(1) Crea una sfida\n(2) Stampa tutte le sfide\n(3) Assegna punti esperienza\n(e) Esci")
