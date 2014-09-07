@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 """
-	Questo script contiene le variabili di configurazione
-	del progetto principale.
+	Questo script contiene alcune variabili di supporto e 
+    l'elenco delle app installate.
 """
 
 from unipath import Path
@@ -13,13 +13,6 @@ BASE_DIR = Path(__file__).ancestor(1)
 
 # Simbolo freccia verso destra
 RARR = "\xe2\x9e\x9c"
-
-# Applicazioni installate
-INSTALLED_APPS = [
-	'dadi',
-    'personaggi',
-    'sfide',
-]
 
 # Colori per la riga di comando
 COLORS = {
@@ -31,3 +24,10 @@ COLORS = {
     'fail': '\033[91m',
     'endc': '\033[0m',
 }
+
+# Applicazioni installate
+INSTALLED_APPS = [
+    'dadi',
+    'personaggi',
+    'sfide',
+]
