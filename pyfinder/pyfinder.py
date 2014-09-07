@@ -4,7 +4,6 @@
 """
     Redireziona e richiama le app invocate dall'utente.
     Tutte le app installate sono riportate in config.py del pacchetto principale.
-    Il progetto e` incluso al $PYTHONPATH tramite il collegamento ~/.pyfinder
 
     @author: Flavio Marcato
 """
