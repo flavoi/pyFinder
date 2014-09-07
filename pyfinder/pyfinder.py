@@ -2,10 +2,9 @@
 # -*- coding: utf-8 -*-
 
 """
-    Menu principale. Richiama le app installate nel progetto corrente.
-    Raccoglie noltre alcune funzioni di supporto.
-
-    Il progetto e` incluso al $PYTHONPATH tramite il collegamente ~/.python
+    Redireziona e richiama le app invocate dall'utente.
+    Tutte le app installate sono riportate in config.py del pacchetto principale.
+    Il progetto e` incluso al $PYTHONPATH tramite il collegamento ~/.pyfinder
 
     @author: Flavio Marcato
 """
