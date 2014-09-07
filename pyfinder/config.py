@@ -8,13 +8,21 @@
 
 from unipath import Path
 
+# Cartella principale del progetto
 BASE_DIR = Path(__file__).ancestor(1)
 
+# Simbolo freccia verso destra
+RARR = "\xe2\x9e\x9c"
+
+# Applicazioni installate
 INSTALLED_APPS = [
 	'dadi',
+    'personaggi',
+    'sfide',
 ]
 
-BCOLORS = {
+# Colori per la riga di comando
+COLORS = {
     'header': '\033[95m',
     'bold': "\033[1m",
     'okblue': '\033[94m',

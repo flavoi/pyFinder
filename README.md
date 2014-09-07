@@ -1,11 +1,11 @@
 pyFinder
 ========
 
-Questo pacchetto raccoglie una serie di script utili al GM nella sessione di gioco.
+Questo pacchetto vuole essere un piccolo coltellino svizzero per organizzare le sessioni di gioco. 
 
-**Applicazioni completate**
-- [x] App _dadi_: simula il lancio dei classici dadi, permettendo l'aggiunta di bonus/malus e ripetizioni. Per invocare lo script: ```python pyfinder.py dadi```
+**Funzionalità incluse**
 
-**Applicazioni in cantiere**
-- [ ] App _exp_: facilita l'assegnazione dei punti esperienza ai giocatori, dividendo equamente i punteggi
-- [ ] App _scheda_: genera un documento pdf tramite LaTeX per una data creatura
+Per invocare lo script desiderato: ```python pyfinder.py <nome_app>```.
+- [x] App *dadi*: simula il lancio dei classici dadi da gioco di ruolo, permettendo l'aggiunta di bonus, malus e ripetizioni. 
+- [x] App *personaggi*: censisce e riporta le caratteristiche dei giocatori memorizzando i loro progressi.
+- [x] App *sfide*: dispensa punti esperienza in maniera equa nel gruppo.
