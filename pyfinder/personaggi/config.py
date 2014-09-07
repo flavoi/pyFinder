@@ -69,4 +69,4 @@ class PersonaggioGiocante:
 
     # Dietro ogni personaggio c'e` una persona vera
     def __str__(self):
-    	return u"%s, pe: %s" % (self.nome_giocatore, self.punti_esperienza)
+    	return u"%s" % self.nome_giocatore
