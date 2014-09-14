@@ -10,6 +10,9 @@
 
 import json, random
 
+from pyfinder.config import GROUPNAME
+JSON_FILE = GROUPNAME + '.json'
+
 """
     Pesca un giocatore a caso e legge i suoi punti esperienza.
     La filosofia di gruppo vuole che tutti i giocatori siano allo stesso livello.
@@ -35,7 +38,7 @@ class PersonaggioGiocante:
         self.nome_giocatore = nome_giocatore
         self.nome_personaggio = nome_personaggio
         self.punti_esperienza = 0
-        with open('personaggi.json', 'r+') as personaggi_correnti:
+        with open(JSON_FILE, 'r+') as personaggi_correnti:
             personaggi = json.load(personaggi_correnti)
             # Allinea punti esperienza al gruppo
             if len(personaggi) > 0:
@@ -55,7 +58,7 @@ class PersonaggioGiocante:
 
     # Salva il persoanggio in base di dati
     def save(self):
-    	with open('personaggi.json', 'r+') as personaggi_correnti:
+    	with open(JSON_FILE, 'r+') as personaggi_correnti:
             personaggi = json.load(personaggi_correnti)
             personaggi[self.nome_giocatore] = {
                 'nome_personaggio': self.nome_personaggio,

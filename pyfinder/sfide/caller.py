@@ -13,7 +13,7 @@ import os, sys, json
 from prettytable import PrettyTable
 
 from pyfinder.config import BASE_DIR, COLORS, RARR
-from pyfinder.personaggi.config import PersonaggioGiocante
+from pyfinder.personaggi.config import JSON_FILE, PersonaggioGiocante
 from pyfinder.sfide.config import Sfida
 
 
@@ -64,7 +64,7 @@ def assegna_punti_esperienza(sfide):
         punti_esperienza_totali += sfida.punti_esperienza
     # Carica i dati dei personaggi in formato lista di dizionari
     os.chdir(BASE_DIR.child('personaggi'))
-    with open('personaggi.json', 'r') as personaggi_correnti:
+    with open(JSON_FILE, 'r') as personaggi_correnti:
         personaggi = json.load(personaggi_correnti)
         # Calcola equamente le ricompense
         pe = punti_esperienza_totali / len(personaggi)
