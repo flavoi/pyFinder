@@ -8,6 +8,9 @@
 
 from unipath import Path
 
+# Gruppo di giocatori corrente
+GROUPNAME = 'atomics'
+
 # Cartella principale del progetto
 BASE_DIR = Path(__file__).ancestor(1)
 

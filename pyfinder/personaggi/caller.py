@@ -11,7 +11,7 @@ import json, sys, random
 from prettytable import PrettyTable
 
 from pyfinder.config import RARR, COLORS
-from pyfinder.personaggi.config import PersonaggioGiocante, get_group_exp
+from pyfinder.personaggi.config import JSON_FILE, PersonaggioGiocante, get_group_exp
 
 
 """
@@ -33,8 +33,11 @@ def formatta_personaggi():
     tabella.align["Giocatore"] = "l"
     tabella.align["Personaggio"] = "l"
     tabella.padding_width = 1
-    with open('personaggi.json', 'r') as personaggi_correnti:
+    with open(JSON_FILE, 'r') as personaggi_correnti:
         personaggi = json.load(personaggi_correnti)
+        # Evidenzia eventuale base di dati vuota
+        if len(personaggi) == 0:
+            tabella = COLORS['warning'] + "Non e` stato ancora censito alcun personaggio." + COLORS['endc']
         # Estrae le informazioni dalla base di dati
         for giocatore in personaggi:
             riga = [giocatore]
@@ -54,7 +57,7 @@ def main():
         ans=raw_input("Inserisci attivita` %s  " % RARR) 
         if ans == "1": 
             pg = crea_nuovo_personaggio()
-            print COLORS['okgreen'] + "Il Personaggio di %s e` stato creato con successo." % pg + COLORS['endc']
+            print COLORS['okgreen'] + "Il personaggio di %s e` stato creato con successo." % pg + COLORS['endc']
         elif ans == "2":
             tabella_personaggi = formatta_personaggi()
             print tabella_personaggi
