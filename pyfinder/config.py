@@ -9,7 +9,10 @@
 from unipath import Path
 
 # Gruppo di giocatori corrente
-GROUPNAME = 'atomics'
+GROUPNAME = 'developer'
+
+# Raccolta di creature corrente
+CREATURELIST = 'creature'
 
 # Cartella principale del progetto
 BASE_DIR = Path(__file__).ancestor(1)
@@ -33,4 +36,5 @@ INSTALLED_APPS = [
     'dadi',
     'personaggi',
     'sfide',
+    'creature',
 ]

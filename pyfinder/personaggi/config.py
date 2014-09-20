@@ -32,7 +32,7 @@ def get_group_exp(personaggi):
 """
 class PersonaggioGiocante:
 
-	# Funzione costruttrice, supporta la creazione di un'istanza vuota
+	# Funzione costruttrice, inizializza nome giocatore, personaggi e pe
     def __init__(self, nome_giocatore=None, nome_personaggio=None):
         # Priorita` ai parametri da riga di comando
         self.nome_giocatore = nome_giocatore
@@ -54,11 +54,11 @@ class PersonaggioGiocante:
 
     # Assegna punti esperienza al giocatore corrente
     def add_punti_esperienza(self, punti):
-    	self.punti_esperienza += punti
+        self.punti_esperienza += punti
 
     # Salva il persoanggio in base di dati
     def save(self):
-    	with open(JSON_FILE, 'r+') as personaggi_correnti:
+        with open(JSON_FILE, 'r+') as personaggi_correnti:
             personaggi = json.load(personaggi_correnti)
             personaggi[self.nome_giocatore] = {
                 'nome_personaggio': self.nome_personaggio,
@@ -72,4 +72,4 @@ class PersonaggioGiocante:
 
     # Dietro ogni personaggio c'e` una persona vera
     def __str__(self):
-    	return u"%s" % self.nome_giocatore
+        return u"%s" % self.nome_giocatore
