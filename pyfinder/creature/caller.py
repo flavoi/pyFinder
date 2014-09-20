@@ -6,21 +6,46 @@
 
     @author: Flavio Marcato
 """
+
 import json, sys
+from prettytable import PrettyTable
 
 from pyfinder.config import RARR, COLORS
+from pyfinder.creature.config import JSON_FILE, Creatura
+
 
 """
     Inizializza una creatura con gli attributi di base
 """
 def crea_nuova_creatura():
-    pass
+    nome = raw_input("Inserisci il nome della creatura: ")
+    tipo = raw_input("Inserisci il tipo di creatura: ")
+    grado_sfida = raw_input("Inserisci il grado sfida: ")
+    creatura = Creatura(nome, tipo, grado_sfida)
+    creatura.save()
+    return creatura
 
 """
     Estrae in una tabella tutte le creature censites in base di dati.
 """
 def formatta_creature():
-    pass
+    # Registra i campi da esporre
+    tabella = PrettyTable(["Nome creatura", "Tipo", "Grado sfida"])
+    tabella.align["Nome creatura"] = "l"
+    tabella.align["Tipo"] = "l"
+    tabella.padding_width = 1
+    with open(JSON_FILE, 'r') as creature_correnti:
+        creature = json.load(creature_correnti)
+        # Evidenzia eventuale base di dati vuota
+        if len(creature) == 0:
+            tabella = COLORS['warning'] + "Non e` stata ancora censito alcuna creatura." + COLORS['endc']
+        # Estrae le informazioni dalla base di dati
+        for creatura in creature:
+            riga = [creatura]
+            for chiave, valore in creature[creatura].iteritems():
+                riga.append(valore)
+            tabella.add_row(riga)
+    return tabella
 
 """
     Invoca menu` principale.

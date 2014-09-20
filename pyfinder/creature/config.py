@@ -7,10 +7,18 @@
 
     @author: Flavio Marcato
 """
+
+import json
+
 from pyfinder.config import CREATURELIST
 JSON_FILE = CREATURELIST + '.json'
 
 
+"""
+    Una creatura del bestiario.
+    Oggetti di questo tipo sono scaricabili in un dizionario
+    tramite l'attributo __dict__.
+"""
 class Creatura:
 
     # Funzione costruttrice, inizializza nome, tipo e grado sfida
