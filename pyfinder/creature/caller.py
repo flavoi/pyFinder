@@ -54,7 +54,7 @@ def formatta_dettaglio_creatura(creatura):
     tabella_attacco.align["Attacco"] = "l"
     if creatura.attacco:
         for attacco in creatura.attacco:
-            riga = [attacco.nome, attacco.attacco, attacco.danni]
+            riga = [attacco.nome.title(), attacco.attacco, attacco.danni]
             tabella_attacco.add_row(riga)
     else: 
         tabella_attacco = COLORS['warning'] + "Non e` stato ancora definito alcun attacco." + COLORS['endc']
@@ -72,7 +72,12 @@ def formatta_dettaglio_creatura(creatura):
     tabella_speciale.align["Descrizione"] = "l"
     if creatura.speciale:
         for speciale in creatura.speciale:
-            riga = [speciale.nome, speciale.descrizione]
+            # Formattazione dedicata a lunghe stringhe
+            descrizione = speciale.descrizione.capitalize()
+            LEN = 75
+            descrizione = [descrizione[i:i+LEN] for i in range(0, len(descrizione), LEN)]
+            descrizione_formattata = "\n".join(descrizione)
+            riga = [speciale.nome.title(), descrizione_formattata]
             tabella_speciale.add_row(riga)
     else:
         tabella_speciale = COLORS['warning'] + "Non e` stata ancora definita alcuna capacita` speciale." + COLORS['endc']
