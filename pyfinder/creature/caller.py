@@ -41,9 +41,7 @@ def formatta_creature():
             tabella = COLORS['warning'] + "Non e` stata ancora censito alcuna creatura." + COLORS['endc']
         # Estrae le informazioni dalla base di dati
         for creatura in creature:
-            riga = [creatura]
-            for chiave, valore in creature[creatura].iteritems():
-                riga.append(valore)
+            riga = [creatura['nome'].title(), creatura['tipo'], creatura['grado_sfida']]
             tabella.add_row(riga)
     return tabella
 

@@ -8,10 +8,62 @@
     @author: Flavio Marcato
 """
 
+from abc import ABCMeta
 import json
 
 from pyfinder.config import CREATURELIST
 JSON_FILE = CREATURELIST + '.json'
+
+"""
+    Definisce una classe pronta per essere salvata
+    in un tracciato json.
+"""
+class Serializzabile:
+    __metaclass__ = ABCMeta
+
+    def to_json(self):
+        return self.__dict__
+
+"""
+    Le abilita` di offesa di una creatura.
+    Possono comprendere armi naturali o armi artificiali.
+"""
+class Attacco(Serializzabile):
+
+    # Funzione costruttrice, inizializza tutti i dati rilevanti
+    def __init__(self, nome=None, attacco=None, danno=None):
+        self.nome = nome
+        self.attacco = attacco
+        self.danno = danno
+
+    def __str__(self):
+        return [self.nome, self.attacco,  self.danno]
+
+"""
+    Le abilita` di difesa di una creatura.
+    Comprende sempre classe armatura, punti ferita e tiri salvezza.
+"""
+class Difesa(Serializzabile):
+
+    # Funzione costruttrice, inizializza tutti i dati rilevanti
+    def __init__(self, classe_armatura=None, punti_ferita=None, tempra=None, riflessi=None, volonta=None):
+        self.classe_armatura = classe_armatura
+        self.punti_ferita = punti_ferita
+        self.tempra = tempra
+        self.riflessi = riflessi
+        self.volonta = volonta
+
+
+"""
+    Le abilita` speciali di una creatura.
+    Comprende note particolari su qualunque aspetto.
+"""
+class Speciale(Serializzabile):
+    
+    # Funzione costruttrice, inizializza tutti i dati rilevanti
+    def __init__(self, nome=None, descrizione=None):
+        self.nome = nome
+        self.descrizione = descrizione
 
 
 """
@@ -19,25 +71,74 @@ JSON_FILE = CREATURELIST + '.json'
     Oggetti di questo tipo sono scaricabili in un dizionario
     tramite l'attributo __dict__.
 """
-class Creatura:
+class Creatura(Serializzabile):
 
-    # Funzione costruttrice, inizializza nome, tipo e grado sfida
+    # Funzione costruttrice, inizializza tutti i dati rilevanti
     def __init__(self, nome=None, tipo=None, grado_sfida=None):
-    	self.nome = nome
+    	# Dati di testata
+        self.nome = nome
     	self.tipo = tipo
     	self.grado_sfida = grado_sfida
+        # Dati di dettaglio
+        self.attacco = []
+        self.difesa = None
+        self.speciale = []
+
+    # Appende un attacco alla lista omonima
+    def aggiungi_attacco(self, nome, attacco, danni):
+        nuovo_attacco = Attacco(nome, attacco, danni)
+        self.attacco.append(nuovo_attacco)
+
+    # Valorizza gli attributi di difesa
+    def aggiungi_difesa(self, classe_armatura, punti_ferita, tempra, riflessi, volonta):
+        self.difesa = Difesa(classe_armatura, punti_ferita, tempra, riflessi, volonta)
+
+    # Appende una capacita` speciale alla lista omonima
+    def aggiungi_speciale(self, nome, descrizione):
+        nuovo_speciale = Speciale(nome, descrizione)
+        self.speciale.append(nuovo_speciale)
+
+    def to_json(self):
+        creatura = {
+            'nome': self.nome,
+            'tipo': self.tipo,
+            'grado_sfida': self.grado_sfida,
+        }
+        # Preparazione attacco
+        attacco_json = []
+        if self.attacco:
+            for n,i in enumerate(self.attacco):
+                attacco_json.append(i.to_json())
+            creatura['attacco'] = attacco_json 
+        # Preparazione difesa
+        if self.difesa:
+            difesa_json = self.difesa.to_json()
+            creatura['difesa'] = difesa_json
+        # Preparazione speciale
+        speciale_json = []
+        if self.speciale:
+            for n,i in enumerate(self.speciale):
+                speciale_json.append(i.to_json())
+            creatura['speciale'] = speciale_json
+        return creatura
 
     # Salva la creatura in base di dati
+    # E` possibile entrare in modifica creando una creatura con nome gia`
+    # censito
     def save(self):
         with open(JSON_FILE, 'r+') as creature_correnti:
             creature = json.load(creature_correnti)
-            creature[self.nome] = {
-                'tipo': self.tipo,
-                'grado_sfida': self.grado_sfida,
-            }
-            # Ritorna all'inizio del tracciato
-            creature_correnti.seek(0)  
-            # Aggiorna l'occorrenza appena preparata
+            creatura_corrente = self.to_json()
+            # Cerca occorrenza di una creatura gia` presente
+            e_nuova_creatura = True
+            for n,i in enumerate(creature):
+                if i['nome'] == creatura_corrente['nome']:
+                    creature[n] = creatura_corrente
+                    e_nuova_creatura = False
+            # Se rilevata come nuova creatura, la appende alle esistenti
+            if e_nuova_creatura:
+                creature.append(creatura_corrente)
+            creature_correnti.seek(0)
             creature_correnti.write(json.dumps(creature, indent=2, sort_keys=True))
             creature_correnti.truncate()
 
