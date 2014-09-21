@@ -38,7 +38,7 @@ def formatta_creature():
         creature = json.load(creature_correnti)
         # Evidenzia eventuale base di dati vuota
         if len(creature) == 0:
-            tabella = COLORS['warning'] + "Non e` stata ancora censito alcuna creatura." + COLORS['endc']
+            tabella = COLORS['warning'] + "Non e` stata ancora censita alcuna creatura." + COLORS['endc']
         # Estrae le informazioni dalla base di dati
         for creatura in creature:
             riga = [creatura['nome'].title(), creatura['tipo'], creatura['grado_sfida']]
@@ -51,7 +51,7 @@ def formatta_creature():
 def formatta_dettaglio_creatura(creatura):
     # Esponde informazioni di attacco
     tabella_attacco = PrettyTable(["Attacco", "Bonus di attacco", "Danni"])
-    tabella_attacco.align["Nome"] = "l"
+    tabella_attacco.align["Attacco"] = "l"
     if creatura.attacco:
         for attacco in creatura.attacco:
             riga = [attacco.nome, attacco.attacco, attacco.danni]
@@ -67,7 +67,7 @@ def formatta_dettaglio_creatura(creatura):
     else:
         tabella_difesa = COLORS['warning'] + "Non e` stata ancora definita alcuna difesa." + COLORS['endc']
     # Esponde informazioni di capacita` speciali
-    tabella_speciale = PrettyTable(["Nome", "Descrizione"])
+    tabella_speciale = PrettyTable(["Speciale", "Descrizione"])
     tabella_speciale.align["Speciale"] = "l"
     tabella_speciale.align["Descrizione"] = "l"
     if creatura.speciale:
@@ -115,14 +115,17 @@ def dettaglio_creatura(creatura):
             ba = raw_input("Inserisci il bonus di attacco: ")
             da = raw_input("Inserisci i danni: ")
             creatura.aggiungi_attacco(na, ba, da)
+            print COLORS['okgreen'] + "Il nuovo attacco e` stato preparato con successo." + COLORS['endc']
         elif ans == "2":
             ca = raw_input("Inserisci la classe armatura: ")
             pf = raw_input("Inserisci i punti ferita: ")
             creatura.aggiungi_difesa(ca, pf)
+            print COLORS['okgreen'] + "La difesa e` stata preparata con successo." + COLORS['endc']
         elif ans == "3":
             ns = raw_input("Inserisci nome dello speciale: ")
             ds = raw_input("Inserisci la descrizione: ")
             creatura.aggiungi_speciale(ns, ds)
+            print COLORS['okgreen'] + "Il nuovo speciale e` stato preparato con successo." + COLORS['endc']
         elif ans == "e":
             print("Ritorno al menu` principale.")
             break
@@ -159,7 +162,7 @@ def main():
                 dc = dettaglio_creatura(sc)
                 print COLORS['okgreen'] + "La creatura %s e` stato aggiornata con successo." % dc + COLORS['endc']
             else:
-                print COLORS['warning'] + "La creatura da te inserita deve ancora essere creata." + COLORS['endc']
+                print COLORS['warning'] + "La creatura da te inserita deve ancora essere censita." + COLORS['endc']
         elif ans == "4":
             sc = seleziona_creatura()
             if sc is not None:
@@ -168,7 +171,7 @@ def main():
                 for td in tabelle_dettagli:
                     print td
             else:
-                print COLORS['warning'] + "La creatura da te inserita deve ancora essere creata." + COLORS['endc']
+                print COLORS['warning'] + "La creatura da te inserita deve ancora essere censita." + COLORS['endc']
         elif ans == "e":
             print("Ciao!") 
             sys.exit(0)
