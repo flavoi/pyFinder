@@ -31,13 +31,13 @@ class Serializzabile:
 class Attacco(Serializzabile):
 
     # Funzione costruttrice, inizializza tutti i dati rilevanti
-    def __init__(self, nome=None, attacco=None, danno=None):
+    def __init__(self, nome=None, attacco=None, danni=None):
         self.nome = nome
         self.attacco = attacco
-        self.danno = danno
+        self.danni = danni
 
     def __str__(self):
-        return [self.nome, self.attacco,  self.danno]
+        return u"%s" % self.nome
 
 """
     Le abilita` di difesa di una creatura.
@@ -46,13 +46,12 @@ class Attacco(Serializzabile):
 class Difesa(Serializzabile):
 
     # Funzione costruttrice, inizializza tutti i dati rilevanti
-    def __init__(self, classe_armatura=None, punti_ferita=None, tempra=None, riflessi=None, volonta=None):
+    def __init__(self, classe_armatura=None, punti_ferita=None):
         self.classe_armatura = classe_armatura
         self.punti_ferita = punti_ferita
-        self.tempra = tempra
-        self.riflessi = riflessi
-        self.volonta = volonta
 
+    def __str__(self):
+        return u"%s, %s" % (self.classe_armatura, self.punti_ferita)
 
 """
     Le abilita` speciali di una creatura.
@@ -65,6 +64,8 @@ class Speciale(Serializzabile):
         self.nome = nome
         self.descrizione = descrizione
 
+    def __str__(self):
+        return u"%s" % self.nome
 
 """
     Una creatura del bestiario.
@@ -90,14 +91,29 @@ class Creatura(Serializzabile):
         self.attacco.append(nuovo_attacco)
 
     # Valorizza gli attributi di difesa
-    def aggiungi_difesa(self, classe_armatura, punti_ferita, tempra, riflessi, volonta):
-        self.difesa = Difesa(classe_armatura, punti_ferita, tempra, riflessi, volonta)
+    def aggiungi_difesa(self, classe_armatura, punti_ferita):
+        self.difesa = Difesa(classe_armatura, punti_ferita)
 
     # Appende una capacita` speciale alla lista omonima
     def aggiungi_speciale(self, nome, descrizione):
         nuovo_speciale = Speciale(nome, descrizione)
         self.speciale.append(nuovo_speciale)
 
+    # Popola un'istanza a partire da un dizionario
+    # I campi devono rispettare la firma del costruttore
+    def autopopola(self, data):
+        self.__init__(data['nome'], data['tipo'], data['grado_sfida'])
+        if 'attacco' in data:
+            for attacco in data['attacco']:
+                self.aggiungi_attacco(attacco['nome'], attacco['attacco'], attacco['danni'])
+        if 'difesa' in data:
+            difesa = data['difesa']
+            self.aggiungi_difesa(difesa['classe_armatura'], difesa['punti_ferita'])
+        if 'speciale' in data:
+            for speciale in data['speciale']:
+                self.aggiungi_speciale(speciale['nome'], speciale['descrizione'])
+
+    # Mappa l'oggetto in un dizionario formato json
     def to_json(self):
         creatura = {
             'nome': self.nome,
@@ -123,8 +139,8 @@ class Creatura(Serializzabile):
         return creatura
 
     # Salva la creatura in base di dati
-    # E` possibile entrare in modifica creando una creatura con nome gia`
-    # censito
+    # E` possibile entrare in modifica creando una creatura con 
+    # nome gia` censito
     def save(self):
         with open(JSON_FILE, 'r+') as creature_correnti:
             creature = json.load(creature_correnti)
