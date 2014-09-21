@@ -9,7 +9,7 @@
 from unipath import Path
 
 # Gruppo di giocatori corrente
-GROUPNAME = 'developer'
+GROUPNAME = 'atomics'
 
 # Raccolta di creature corrente
 CREATURELIST = 'creature'
