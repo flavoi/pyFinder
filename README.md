@@ -3,7 +3,7 @@ pyFinder
 
 Questo pacchetto vuole essere un piccolo coltellino svizzero per organizzare le sessioni di gioco. 
 
-**Funzionalità incluse**
+## Funzionalità incluse
 
 Per invocare lo script desiderato: ```python pyfinder.py <nome_app>```.
 - [x] App *dadi*: simula il lancio dei classici dadi da gioco di ruolo, permettendo l'aggiunta di bonus, malus e ripetizioni. 
@@ -12,7 +12,7 @@ Per invocare lo script desiderato: ```python pyfinder.py <nome_app>```.
 - [x] App *creature*: censisce e riporta le caratteristiche di creature controllate dal game master. 
 - [ ] App *archetipi*: censisce, gestisce e assegna archetipi ad una creatura.
 
-Gli attributi di un personaggio 
+## Gli attributi di un personaggio
 
 | Generale                        | 
 | ------------------------------- | 
@@ -21,7 +21,7 @@ Gli attributi di un personaggio
 | punti esperienza                |
 
 
-**Gli attributi di una creatura**
+## Gli attributi di una creatura**
 
 | Generale | Attacco | Difesa | Speciale | 
 | -------- | ------- | ------ | -------- |
