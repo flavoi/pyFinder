@@ -59,10 +59,10 @@ def formatta_dettaglio_creatura(creatura):
     else: 
         tabella_attacco = COLORS['warning'] + "Non e` stato ancora definito alcun attacco." + COLORS['endc']
     # Esponde informazioni di difesa
-    tabella_difesa = PrettyTable(["Classe armatura", "Punti ferita"])
+    tabella_difesa = PrettyTable(["Classe armatura", "Punti ferita", "Resistenza ai danni"])
     if creatura.difesa:
         difesa = creatura.difesa
-        riga = [difesa.classe_armatura, difesa.punti_ferita]
+        riga = [difesa.classe_armatura, difesa.punti_ferita, difesa.resistenza_ai_danni]
         tabella_difesa.add_row(riga)
     else:
         tabella_difesa = COLORS['warning'] + "Non e` stata ancora definita alcuna difesa." + COLORS['endc']
@@ -124,7 +124,8 @@ def dettaglio_creatura(creatura):
         elif ans == "2":
             ca = raw_input("Inserisci la classe armatura: ")
             pf = raw_input("Inserisci i punti ferita: ")
-            creatura.aggiungi_difesa(ca, pf)
+            rd = raw_input("Inserisci eventuale resistenza ai danni: ")
+            creatura.aggiungi_difesa(ca, pf, rd)
             print COLORS['okgreen'] + "La difesa e` stata preparata con successo." + COLORS['endc']
         elif ans == "3":
             ns = raw_input("Inserisci nome dello speciale: ")

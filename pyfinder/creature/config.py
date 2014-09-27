@@ -46,12 +46,13 @@ class Attacco(Serializzabile):
 class Difesa(Serializzabile):
 
     # Funzione costruttrice, inizializza tutti i dati rilevanti
-    def __init__(self, classe_armatura=None, punti_ferita=None):
+    def __init__(self, classe_armatura=None, punti_ferita=None, resistenza_ai_danni=None):
         self.classe_armatura = classe_armatura
         self.punti_ferita = punti_ferita
+        self.resistenza_ai_danni = resistenza_ai_danni
 
     def __str__(self):
-        return u"%s, %s" % (self.classe_armatura, self.punti_ferita)
+        return u"%s, %s, %s" % (self.classe_armatura, self.punti_ferita, self.resistenza_ai_danni)
 
 """
     Le abilita` speciali di una creatura.

@@ -27,4 +27,4 @@ Per invocare lo script desiderato: ```python pyfinder.py <nome_app>```.
 | -------- | ------- | ------ | -------- |
 | nome | nome | classe armatura | nome |
 | tipo | bonus di attacco | punti ferita | descrizione |
-| grado sfida | danni | 
+| grado sfida | danni | resistenza al danno |
