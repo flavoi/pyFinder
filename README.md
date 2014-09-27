@@ -12,17 +12,19 @@ Per invocare lo script desiderato: ```python pyfinder.py <nome_app>```.
 - [x] App *creature*: censisce e riporta le caratteristiche di creature controllate dal game master. 
 - [ ] App *archetipi*: censisce, gestisce e assegna archetipi ad una creatura.
 
-Gli attributi di un personaggio:
-- nome giocatore
-- nome personaggio
-- punti esperienza
+Gli attributi di un personaggio 
 
-Gli attributi di una creatura:
-- attacchi
-    - bonus di attacco
-    - danni
-- difesa
-    - classe armatura
-    - punti ferita
-- capacità speciali
+| Generale                        | 
+| --------------------------------| 
+| nome giocatore                  |
+| nome personaggio                |
+| punti esperienza                |
 
+
+**Gli attributi di una creatura**
+
+| Generale | Attacco | Difesa | Speciale | 
+| -------- | ------- | ------ | -------- |
+| nome | nome | classe armatura | nome |
+| tipo | bonus di attacco | punti ferita | descrizione |
+| grado sfida | danni | 
