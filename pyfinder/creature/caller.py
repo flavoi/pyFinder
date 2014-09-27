@@ -21,7 +21,10 @@ def crea_nuova_creatura():
     nome = raw_input("Inserisci il nome della creatura: ")
     tipo = raw_input("Inserisci il tipo di creatura: ")
     grado_sfida = raw_input("Inserisci il grado sfida: ")
-    creatura = Creatura(nome, tipo, grado_sfida)
+    taglia = raw_input("Inserisci la taglia: ")
+    allineamento = raw_input("Inserisci l'allineamento: ")
+    dadi_vita = raw_input("Inserisci i dadi vita: ")
+    creatura = Creatura(nome, tipo, grado_sfida, taglia, allineamento, dadi_vita)
     creatura.save()
     return creatura
 
@@ -30,7 +33,7 @@ def crea_nuova_creatura():
 """
 def formatta_creature():
     # Registra i campi da esporre
-    tabella = PrettyTable(["Nome creatura", "Tipo", "Grado sfida"])
+    tabella = PrettyTable(["Nome creatura", "Tipo", "Grado sfida", "Taglia", "Allineamento", "Dadi vita"])
     tabella.align["Nome creatura"] = "l"
     tabella.align["Tipo"] = "l"
     tabella.padding_width = 1
@@ -41,7 +44,14 @@ def formatta_creature():
             tabella = COLORS['warning'] + "Non e` stata ancora censita alcuna creatura." + COLORS['endc']
         # Estrae le informazioni dalla base di dati
         for creatura in creature:
-            riga = [creatura['nome'].title(), creatura['tipo'], creatura['grado_sfida']]
+            riga = [
+                creatura['nome'].title(), 
+                creatura['tipo'], 
+                creatura['grado_sfida'], 
+                creatura['taglia'].upper(),
+                creatura['allineamento'].upper(),
+                creatura['dadi_vita'],
+            ]
             tabella.add_row(riga)
     return tabella
 
