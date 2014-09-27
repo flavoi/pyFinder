@@ -8,21 +8,11 @@
     @author: Flavio Marcato
 """
 
-from abc import ABCMeta
 import json
 
-from pyfinder.config import CREATURELIST
+from pyfinder.config import CREATURELIST, Serializzabile
 JSON_FILE = CREATURELIST + '.json'
 
-"""
-    Definisce una classe pronta per essere salvata
-    in un tracciato json.
-"""
-class Serializzabile:
-    __metaclass__ = ABCMeta
-
-    def to_json(self):
-        return self.__dict__
 
 """
     Le abilita` di offesa di una creatura.
@@ -70,8 +60,7 @@ class Speciale(Serializzabile):
 
 """
     Una creatura del bestiario.
-    Include attributi generali e di dettaglio. Solo i secondi sono
-    modificabili in seguito.
+    Include attributi generali e di dettaglio.
 """
 class Creatura(Serializzabile):
 
@@ -84,7 +73,6 @@ class Creatura(Serializzabile):
         self.taglia = taglia
         self.allineamento = allineamento
         self.dadi_vita = dadi_vita
-
         # Dati di dettaglio
         self.attacco = []
         self.difesa = None
@@ -103,6 +91,21 @@ class Creatura(Serializzabile):
     def aggiungi_speciale(self, nome, descrizione):
         nuovo_speciale = Speciale(nome, descrizione)
         self.speciale.append(nuovo_speciale)
+
+    # La modifica degli attributi tramite archetipo e` volutamente stringente
+    # @params archetipo: un oggetti tipo archetipo dall'app 'archetipi'
+    def applica_archetipo(self, archetipo):
+        # Aggiornamento attributi generali
+        self.nome += ' %s' % archetipo.nome_archetipo
+        if archetipo.mod_tipo:
+            self.tipo = archetipo.mod_tipo
+        self.grado_sfida += archetipo.mod_grado_sfida
+        if archetipo.mod_taglia:
+            self.taglia = archetipo.mod_taglia
+        if archetipo.mod_allineamento
+            self.allineamento = archetipo.mod_allineamento
+        self.dadi_vita += archetipo.mod_dadi_vita
+        # Aggiornamento attributi di dettaglio (da completares)
 
     # Popola un'istanza a partire da un dizionario
     # I campi devono rispettare la firma del costruttore

@@ -7,12 +7,16 @@
 """
 
 from unipath import Path
+from abc import ABCMeta
 
-# Gruppo di giocatori corrente
+# Raccolta corrente di giocatori
 GROUPNAME = 'atomics'
 
-# Raccolta di creature corrente
+# Raccolta corrente di creature
 CREATURELIST = 'creature'
+
+# Raccolta corrente di archetipi
+TEMPLATESLIST = 'archetipi'
 
 # Cartella principale del progetto
 BASE_DIR = Path(__file__).ancestor(1)
@@ -37,4 +41,15 @@ INSTALLED_APPS = [
     'personaggi',
     'sfide',
     'creature',
+    'archetipi',
 ]
+
+"""
+    Definisce una classe pronta per essere salvata in un tracciato.
+"""
+class Serializzabile:
+    __metaclass__ = ABCMeta
+
+    def to_json(self):
+        return self.__dict__
+
