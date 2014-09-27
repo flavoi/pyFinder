@@ -14,14 +14,14 @@ Per invocare lo script desiderato: ```python pyfinder.py <nome_app>```.
 
 ## Gli attributi di un personaggio
 
-| Generale                        | 
-| ------------------------------- | 
-| nome giocatore                  |
-| nome personaggio                |
-| punti esperienza                |
+| Generale            |
+| ------------------  |
+| nome giocatore      |
+| nome personaggio    |
+| punti esperienza    |
 
 
-## Gli attributi di una creatura**
+## Gli attributi di una creatura
 
 | Generale | Attacco | Difesa | Speciale | 
 | -------- | ------- | ------ | -------- |
