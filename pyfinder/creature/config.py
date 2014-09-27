@@ -92,8 +92,8 @@ class Creatura(Serializzabile):
         self.attacco.append(nuovo_attacco)
 
     # Valorizza gli attributi di difesa
-    def aggiungi_difesa(self, classe_armatura, punti_ferita):
-        self.difesa = Difesa(classe_armatura, punti_ferita)
+    def aggiungi_difesa(self, classe_armatura, punti_ferita, resistenza_ai_danni):
+        self.difesa = Difesa(classe_armatura, punti_ferita, resistenza_ai_danni)
 
     # Appende una capacita` speciale alla lista omonima
     def aggiungi_speciale(self, nome, descrizione):
@@ -109,7 +109,7 @@ class Creatura(Serializzabile):
                 self.aggiungi_attacco(attacco['nome'], attacco['attacco'], attacco['danni'])
         if 'difesa' in data:
             difesa = data['difesa']
-            self.aggiungi_difesa(difesa['classe_armatura'], difesa['punti_ferita'])
+            self.aggiungi_difesa(difesa['classe_armatura'], difesa['punti_ferita'], difesa['resistenza_ai_danni'])
         if 'speciale' in data:
             for speciale in data['speciale']:
                 self.aggiungi_speciale(speciale['nome'], speciale['descrizione'])
