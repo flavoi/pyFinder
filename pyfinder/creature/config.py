@@ -70,17 +70,21 @@ class Speciale(Serializzabile):
 
 """
     Una creatura del bestiario.
-    Oggetti di questo tipo sono scaricabili in un dizionario
-    tramite l'attributo __dict__.
+    Include attributi generali e di dettaglio. Solo i secondi sono
+    modificabili in seguito.
 """
 class Creatura(Serializzabile):
 
     # Funzione costruttrice, inizializza tutti i dati rilevanti
-    def __init__(self, nome=None, tipo=None, grado_sfida=None):
-    	# Dati di testata
+    def __init__(self, nome=None, tipo=None, grado_sfida=None, taglia='m', allineamento='nn', dadi_vita=1):
+    	# Dati generali
         self.nome = nome
     	self.tipo = tipo
     	self.grado_sfida = grado_sfida
+        self.taglia = taglia
+        self.allineamento = allineamento
+        self.dadi_vita = dadi_vita
+
         # Dati di dettaglio
         self.attacco = []
         self.difesa = None
@@ -120,6 +124,9 @@ class Creatura(Serializzabile):
             'nome': self.nome,
             'tipo': self.tipo,
             'grado_sfida': self.grado_sfida,
+            'taglia': self.taglia,
+            'allineamento': self.allineamento,
+            'dadi_vita': self.dadi_vita,
         }
         # Preparazione attacco
         attacco_json = []
