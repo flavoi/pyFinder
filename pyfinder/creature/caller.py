@@ -29,7 +29,7 @@ def crea_nuova_creatura():
     return creatura
 
 """
-    Estrae in una tabella tutte le creature censites in base di dati.
+    Estrae in una tabella tutte le creature censite in base di dati.
 """
 def formatta_creature():
     # Registra i campi da esporre

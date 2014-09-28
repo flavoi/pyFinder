@@ -92,21 +92,6 @@ class Creatura(Serializzabile):
         nuovo_speciale = Speciale(nome, descrizione)
         self.speciale.append(nuovo_speciale)
 
-    # La modifica degli attributi tramite archetipo e` volutamente stringente
-    # @params archetipo: un oggetti tipo archetipo dall'app 'archetipi'
-    def applica_archetipo(self, archetipo):
-        # Aggiornamento attributi generali
-        self.nome += ' %s' % archetipo.nome_archetipo
-        if archetipo.mod_tipo:
-            self.tipo = archetipo.mod_tipo
-        self.grado_sfida += archetipo.mod_grado_sfida
-        if archetipo.mod_taglia:
-            self.taglia = archetipo.mod_taglia
-        if archetipo.mod_allineamento
-            self.allineamento = archetipo.mod_allineamento
-        self.dadi_vita += archetipo.mod_dadi_vita
-        # Aggiornamento attributi di dettaglio (da completares)
-
     # Popola un'istanza a partire da un dizionario
     # I campi devono rispettare la firma del costruttore
     def autopopola(self, data):

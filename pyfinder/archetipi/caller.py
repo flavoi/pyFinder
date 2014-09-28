@@ -25,6 +25,28 @@ def crea_nuovo_archetipo():
     return archetipo
 
 """
+    Estrae in una tabella tutti gli archetipi censiti in base di dati
+"""
+def formatta_archetipi():
+    # Registra i campi da esporre
+    tabella = PrettyTable(["Nome archetipo", "Grado sfida"])
+    tabella.align["Nome archetipo"] = "l"
+    tabella.padding_width = 1
+    with open(JSON_FILE, 'r') as archetipi_correnti:
+        archetipi = json.load(archetipi_correnti)
+        # Evidenzia eventuale base di dati vuota
+        if len(archetipi) == 0:
+            tabella = COLORS['warning'] + "Non e` stato ancora censito alcun archetipo." + COLORS['endc']
+        # Estrae le informazioni dalla base di dati
+        for archetipo in archetipi:
+            riga = [
+                archetipo['nome_archetipo'].title(),
+                archetipo['mod_grado_sfida'],
+            ]
+            tabella.add_row(riga)
+    return tabella
+
+"""
     Invoca menu` principale.
 """
 def main():
@@ -41,6 +63,9 @@ def main():
         if ans == "1":
             ao = crea_nuovo_archetipo()
             print COLORS['okgreen'] + "L'archetipo %s e` stato creato con successo." % ao + COLORS['endc']
+        if ans == "2":
+            tabella_archetipi = formatta_archetipi()
+            print tabella_archetipi
         elif ans == "e":
             print("Ciao!") 
             sys.exit(0)

@@ -14,12 +14,11 @@ JSON_FILE = TEMPLATESLIST + '.json'
 
 class Archetipo(Serializzabile):
     
-    # Funzione costruttrice, inizializza tutti i dati rilevanti
+    # Funzione costruttrice, inizializza tutti i dati generali
     def __init__(self, nome_archetipo, mod_tipo=None, mod_grado_sfida=0, mod_taglia=None, mod_allineamento=None, mod_dadi_vita=None):
         # Attributi generali
         self.nome_archetipo = nome_archetipo
         self.mod_grado_sfida = mod_grado_sfida
-        # Attributi di dettaglio
         self.mod_tipo = mod_tipo
         self.mod_taglia = mod_taglia
         self.mod_allineamento = mod_allineamento
@@ -47,3 +46,29 @@ class Archetipo(Serializzabile):
 
     def __str__(self):
         return u'%s' % self.nome_archetipo
+
+    # Interviene sugli attributi generali di una creatura
+    # Per trovare numeri da sringhe: re.search("\d+", s).group()
+    def modifica_generale(creatura):
+        pass
+
+    # Interviene sugli attributi di attacco di una creatura
+    def modifica_attacco(creatura):
+        pass
+
+    # Interviene sugli attributi di difesa di una creatura
+    def modifica_difesa(creatura):
+        pass
+
+    # Interviene sugli attributi speciali di una creatura
+    def modifica_speciale(creatura):
+        pass
+
+    # La modifica degli attributi tramite archetipo e` volutamente stringente
+    # @params creatura: un oggetto tipo Creatura dall'app 'creature'
+    def applica_archetipo(self, creatura):
+        creatura = modifica_generale(creatura)
+        creatura = modifica_attacco(creatura)
+        creatura = modifica_difesa(creatura)
+        creatura = modifica_speciale(creatura)
+        return creatura
