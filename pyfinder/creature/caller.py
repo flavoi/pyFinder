@@ -93,13 +93,11 @@ def formatta_dettaglio_creatura(creatura):
         tabella_speciale = COLORS['warning'] + "Non e` stata ancora definita alcuna capacita` speciale." + COLORS['endc']
     return (tabella_attacco, tabella_difesa, tabella_speciale)
 
-
-
 """
     Seleziona una creatura censita in base di dati tramite nome.
 """
 def seleziona_creatura():
-    nome_creatura = raw_input("Inserisci il nome della creatura da dettagliare: ")
+    nome_creatura = raw_input("Ricerca creatura tramite il suo nome: ")
     # Rirca in base di dati
     with open(JSON_FILE, 'r') as creature_correnti:
         creature = json.load(creature_correnti)

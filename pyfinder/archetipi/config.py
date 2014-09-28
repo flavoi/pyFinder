@@ -7,7 +7,7 @@
 
     @author: Flavio Marcato
 """
-import json
+import json, re
 
 from pyfinder.config import TEMPLATESLIST, Serializzabile
 JSON_FILE = TEMPLATESLIST + '.json'
@@ -15,7 +15,7 @@ JSON_FILE = TEMPLATESLIST + '.json'
 class Archetipo(Serializzabile):
     
     # Funzione costruttrice, inizializza tutti i dati generali
-    def __init__(self, nome_archetipo, mod_tipo=None, mod_grado_sfida=0, mod_taglia=None, mod_allineamento=None, mod_dadi_vita=None):
+    def __init__(self, nome_archetipo, mod_tipo=None, mod_grado_sfida=0, mod_taglia=None, mod_allineamento=None, mod_dadi_vita=0):
         # Attributi generali
         self.nome_archetipo = nome_archetipo
         self.mod_grado_sfida = mod_grado_sfida
@@ -45,30 +45,37 @@ class Archetipo(Serializzabile):
             archetipi_correnti.truncate()
 
     def __str__(self):
-        return u'%s' % self.nome_archetipo
+        return u'%s, %s' % (self.nome_archetipo, self.mod_grado_sfida)
 
     # Interviene sugli attributi generali di una creatura
-    # Per trovare numeri da sringhe: re.search("\d+", s).group()
-    def modifica_generale(creatura):
-        pass
+    # Per estrarre numeri daz stringhe: re.search("\d+", s).group()
+    def modifica_generale(self, creatura):
+        creatura.nome += " %s" % self.nome_archetipo
+        creatura.grado_sfida = float(creatura.grado_sfida) + float(re.search("\d+", self.mod_grado_sfida).group())
+        creatura.tipo = self.mod_tipo or creatura.tipo
+        creatura.taglia = self.mod_taglia or creatura.taglia
+        creatura.allineamento = self.mod_allineamento or creatura.allineamento
+        creatura.dadi_vita = int(creatura.dadi_vita) + int(self.mod_dadi_vita)
+        return creatura
 
     # Interviene sugli attributi di attacco di una creatura
-    def modifica_attacco(creatura):
-        pass
+    def modifica_attacco(self, creatura):
+        return creatura
 
     # Interviene sugli attributi di difesa di una creatura
-    def modifica_difesa(creatura):
-        pass
+    def modifica_difesa(self, creatura):
+        return creatura
 
     # Interviene sugli attributi speciali di una creatura
-    def modifica_speciale(creatura):
-        pass
+    def modifica_speciale(self, creatura):
+        return creatura
 
     # La modifica degli attributi tramite archetipo e` volutamente stringente
     # @params creatura: un oggetto tipo Creatura dall'app 'creature'
     def applica_archetipo(self, creatura):
-        creatura = modifica_generale(creatura)
-        creatura = modifica_attacco(creatura)
-        creatura = modifica_difesa(creatura)
-        creatura = modifica_speciale(creatura)
+        creatura = self.modifica_generale(creatura)
+        creatura = self.modifica_attacco(creatura)
+        creatura = self.modifica_difesa(creatura)
+        creatura = self.modifica_speciale(creatura)
+        creatura.save()
         return creatura

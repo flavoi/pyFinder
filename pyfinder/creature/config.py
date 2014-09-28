@@ -65,7 +65,7 @@ class Speciale(Serializzabile):
 class Creatura(Serializzabile):
 
     # Funzione costruttrice, inizializza tutti i dati rilevanti
-    def __init__(self, nome=None, tipo=None, grado_sfida=None, taglia='m', allineamento='nn', dadi_vita=1):
+    def __init__(self, nome=None, tipo=None, grado_sfida=None, taglia=None, allineamento=None, dadi_vita=1):
     	# Dati generali
         self.nome = nome
     	self.tipo = tipo
@@ -95,7 +95,14 @@ class Creatura(Serializzabile):
     # Popola un'istanza a partire da un dizionario
     # I campi devono rispettare la firma del costruttore
     def autopopola(self, data):
-        self.__init__(data['nome'], data['tipo'], data['grado_sfida'])
+        self.__init__(
+            data['nome'], 
+            data['tipo'], 
+            data['grado_sfida'], 
+            data['taglia'],
+            data['allineamento'],
+            data['dadi_vita']
+        )
         if 'attacco' in data:
             for attacco in data['attacco']:
                 self.aggiungi_attacco(attacco['nome'], attacco['attacco'], attacco['danni'])
