@@ -148,6 +148,7 @@ def main():
                 sc = seleziona_creatura()
                 if sc is not None:            
                     chdir(BASE_DIR.child('archetipi'))
+                    la = None
                     if so.mod_attacco > 0 or so.mod_danni > 0:
                         la = raw_input("Indica gli attacchi impattati: ")
                         # La virgola separa i singoli campi

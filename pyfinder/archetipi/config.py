@@ -78,7 +78,7 @@ class Archetipo(Serializzabile):
     # Per estrarre numeri daz stringhe: re.search("\d+", s).group()
     def modifica_generale(self, creatura):
         creatura.nome += " %s" % self.nome_archetipo
-        creatura.grado_sfida = float(creatura.grado_sfida) + float(re.search("\d+", self.mod_grado_sfida).group())
+        creatura.grado_sfida = int(float(creatura.grado_sfida) + float(re.search("\d+", self.mod_grado_sfida).group()))
         creatura.tipo = self.mod_tipo or creatura.tipo
         creatura.taglia = self.mod_taglia or creatura.taglia
         creatura.allineamento = self.mod_allineamento or creatura.allineamento
@@ -87,7 +87,8 @@ class Archetipo(Serializzabile):
 
     # Interviene sugli attributi di attacco di una creatura
     # @param selettivo: e` la lista di attacchi impattati dalla modifica
-    #                   None impatta su tutti gli attacchi della creatura
+    #                   <vuoto> impatta su tutti gli attacchi della creatura
+    #                    None non impatta su alcun attacco
     @staticmethod
     def gestisci_at(creatura_at, mod_at):
         bonus = int(creatura_at) + int(mod_at)
@@ -119,10 +120,11 @@ class Archetipo(Serializzabile):
         return creatura_dn
 
     def modifica_attacco(self, creatura, selettivo=None):
-        for attacco in creatura.attacco:
-            if attacco.nome in selettivo or selettivo[0] == '':
-                attacco.attacco = Archetipo.gestisci_at(attacco.attacco, self.mod_attacco)
-                attacco.danni = Archetipo.gestisci_dn(attacco.danni, self.mod_danni)
+        if selettivo:
+            for attacco in creatura.attacco:
+                if attacco.nome in selettivo or selettivo[0] == '':
+                    attacco.attacco = Archetipo.gestisci_at(attacco.attacco, self.mod_attacco)
+                    attacco.danni = Archetipo.gestisci_dn(attacco.danni, self.mod_danni)
         return creatura
 
     # Interviene sugli attributi di difesa di una creatura
