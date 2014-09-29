@@ -29,6 +29,7 @@ class Attacco(Serializzabile):
     def __str__(self):
         return u"%s" % self.nome
 
+
 """
     Le abilita` di difesa di una creatura.
     Comprende sempre classe armatura, punti ferita e tiri salvezza.
@@ -44,6 +45,7 @@ class Difesa(Serializzabile):
     def __str__(self):
         return u"%s, %s, %s" % (self.classe_armatura, self.punti_ferita, self.resistenza_ai_danni)
 
+
 """
     Le abilita` speciali di una creatura.
     Comprende note particolari su qualunque aspetto.
@@ -57,6 +59,7 @@ class Speciale(Serializzabile):
 
     def __str__(self):
         return u"%s" % self.nome
+
 
 """
     Una creatura del bestiario.

@@ -121,7 +121,12 @@ def seleziona_creatura():
 def dettaglio_creatura(creatura):
     while True:
         print
-        print "(1) Aggiungi attacco\n(2) Definisci difesa\n(3) Aggiungi speciale\n(e) Esci"
+        print "\
+(1) Aggiungi attacco\n\
+(2) Definisci difesa\n\
+(3) Aggiungi speciale\n\
+(e) Esci\
+"
         ans = raw_input("Inserisci attivita` %s  " % RARR)
         if ans == "1":
             na = raw_input("Inserisci il nome dell'attacco: ")

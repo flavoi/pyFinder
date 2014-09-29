@@ -68,6 +68,48 @@ def seleziona_archetipo():
             return None
 
 """
+    Entra in modalita` dettaglio per un archetipo selezionato.
+    Informazioni di dettaglio:
+        - attributi di attacco
+        - attributi di difesa
+        - capacita` speciali
+"""
+def dettaglio_archetipo(archetipo):
+    while True:
+        print
+        print "\
+(1) Aggiungi attacco\n\
+(2) Definisci difesa\n\
+(3) Aggiungi speciale\n\
+(e) Esci\
+"
+        ans = raw_input("Inserisci attivita` %s  " % RARR)
+        if ans == "1":
+            ba = int(raw_input("Inserisci il bonus di attacco: "))
+            da = int(raw_input("Inserisci i danni: "))
+            so = int(raw_input("Stabilisci se il bonus debba essere selettivo: "))
+            archetipo.aggiungi_mod_attacco(ba, da, so)
+            print COLORS['okgreen'] + "Il bonus di attacco e` stato preparato con successo." + COLORS['endc']
+        elif ans == "2":
+            ca = int(raw_input("Inserisci il bonus alla classe armatura: "))
+            pf = int(raw_input("Inserisci il bonus ai punti ferita per dado vita: "))
+            rd = raw_input("Inserisci la nuova resistenza al danno: ")
+            archetipo.aggiungi_mod_difesa(ca, pf, rd)
+            print COLORS['okgreen'] + "Il bonus di difesa e` stato preparato con successo." + COLORS['endc']
+        elif ans == "3":
+            nc = raw_input("Inserisci il nome della nuova capacita` speciale: ")
+            dc = raw_input("Inserisci relativa descrizione: ")
+            archetipo.aggiungi_speciale(nc, dc)
+            print COLORS['okgreen'] + "Il nuovo speciale e` stato preparato con successo." + COLORS['endc']
+        elif ans == "e":
+            print("Ritorno al menu` principale.")
+            break
+        else:
+            print COLORS['warning'] + "La scelta non e` valida, riprova." + COLORS['endc']            
+    archetipo.save()
+    return archetipo
+
+"""
     Invoca menu` principale.
 """
 def main():
@@ -90,16 +132,29 @@ def main():
             tabella_archetipi = formatta_archetipi()
             print tabella_archetipi
         elif ans == "3":
-            pass
+            sa = seleziona_archetipo()
+            if sa is not None:
+                print COLORS['okgreen'] + "Selezionato archetipo %s, procedo." % sa + COLORS['endc']
+                da = dettaglio_archetipo(sa)
+                print COLORS['okgreen'] + "L'archetipo %s e` stato aggiornato con successo." % da + COLORS['endc']
+            else:
+                print COLORS['warning'] + "L'archetipo da te inserito deve ancora essere censito." + COLORS['endc']
         elif ans == "4":
             pass
         elif ans == "5":
-            so = seleziona_archetipo()
-            chdir(BASE_DIR.child('creature'))
-            sc = seleziona_creatura()            
-            cm = so.applica_archetipo(sc)
             chdir(BASE_DIR.child('archetipi'))
-            print COLORS['okgreen'] + "Creatura %s modellata con successo" % cm + COLORS['endc']
+            so = seleziona_archetipo()
+            if so is not None:
+                chdir(BASE_DIR.child('creature'))
+                sc = seleziona_creatura()
+                if sc is not None:            
+                    chdir(BASE_DIR.child('archetipi'))
+                    cm = so.applica_archetipo(sc)
+                    print COLORS['okgreen'] + "Creatura %s modellata con successo" % cm + COLORS['endc']
+                else:
+                    print COLORS['warning'] + "La creatura da te inserita deve ancora essere censita." + COLORS['endc']
+            else:
+                print COLORS['warning'] + "L'archetipo da te inserito deve ancora essere censito." + COLORS['endc']
         elif ans == "e":
             print("Ciao!") 
             sys.exit(0)

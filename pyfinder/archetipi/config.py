@@ -8,9 +8,11 @@
     @author: Flavio Marcato
 """
 import json, re
+from os import chdir
 
-from pyfinder.config import TEMPLATESLIST, Serializzabile
+from pyfinder.config import TEMPLATESLIST, Serializzabile, BASE_DIR
 JSON_FILE = TEMPLATESLIST + '.json'
+
 
 class Archetipo(Serializzabile):
     
@@ -23,6 +25,16 @@ class Archetipo(Serializzabile):
         self.mod_taglia = mod_taglia
         self.mod_allineamento = mod_allineamento
         self.mod_dadi_vita = mod_dadi_vita
+        # Attributi di attacco
+        self.mod_attacco = 0
+        self.mod_danni = 0
+        self.selettivo = False
+        # Attributi di difesa
+        self.mod_classe_armatura = 0
+        self.mod_punti_ferita = 0
+        self.mod_resistenza_ai_danni = None
+        # Attributi di capacita` speciali
+        self.speciale = []
 
     # Salva l'archetipo in base di dati
     # E` possibile entrare in modifica creando un archetipo con 
@@ -44,8 +56,24 @@ class Archetipo(Serializzabile):
             archetipi_correnti.write(json.dumps(archetipi, indent=2, sort_keys=True))
             archetipi_correnti.truncate()
 
+    # Popola i dati di attacco
+    def aggiungi_mod_attacco(self, attacco, danni, selettivo):
+        self.mod_attacco = attacco
+        self.mod_danni = danni
+        self.selettivo = selettivo
+
+    # Popola i dati di difesa
+    def aggiungi_mod_difesa(self, classe_armatura, punti_ferita, resistenza_ai_danni):
+        self.mod_classe_armatura = classe_armatura
+        self.mod_punti_ferita = punti_ferita
+        self.mod_resistenza_ai_danni = resistenza_ai_danni
+
+    # Popola i dati di capacita` speciali
+    def aggiungi_speciale(self, nome, descrizione):
+        self.speciale.append((nome, descrizione))
+
     def __str__(self):
-        return u'%s, %s' % (self.nome_archetipo, self.mod_grado_sfida)
+        return u"%s" % self.nome_archetipo
 
     # Interviene sugli attributi generali di una creatura
     # Per estrarre numeri daz stringhe: re.search("\d+", s).group()
@@ -59,11 +87,39 @@ class Archetipo(Serializzabile):
         return creatura
 
     # Interviene sugli attributi di attacco di una creatura
-    def modifica_attacco(self, creatura):
+    # @param selettivo: identifica se il cambiamento riguarda tutti
+    #                   gli attacchi o solo alcuni in particolare
+    def modifica_attacco(self, creatura, selettivo=False):
         return creatura
 
     # Interviene sugli attributi di difesa di una creatura
+    @staticmethod
+    def gestisci_rd(creatura_rd, mod_rd):
+        if creatura_rd:
+            # Determina il valore numerico piu` vantaggioso
+            num_rd = int(re.search("\d+", creatura_rd).group())
+            mod_num_rd = int(re.search("\d+", mod_rd).group())
+            if mod_num_rd > num_rd:
+                creatura_rd = creatura_rd.replace(str(num_rd), str(mod_num_rd))
+            # Determina il suffisso piu` vantaggioso tramite 
+            # valore maggiore o concatenazione
+            suffix_rd = creatura_rd.split("/")[1]
+            suffix_mod_rd = mod_rd.split("/")[1]
+            if suffix_rd != suffix_mod_rd:
+                try:
+                    if int(suffix_mod_rd) > int(suffix_rd):
+                        creatura_rd = creatura_rd.replace(str(suffix_rd), str(suffix_mod_rd))
+                except ValueError:
+                    creatura_rd += " e %s" % suffix_mod_rd
+        else:
+            creatura_rd = mod_rd
+        return creatura_rd
+
     def modifica_difesa(self, creatura):
+        if creatura.difesa is not None:
+            creatura.difesa.classe_armatura = int(creatura.difesa.classe_armatura) + int(self.mod_classe_armatura)
+            creatura.difesa.punti_ferita = int(creatura.difesa.punti_ferita) + int(self.mod_punti_ferita) * int(creatura.dadi_vita)
+            creatura.difesa.resistenza_ai_danni = Archetipo.gestisci_rd(creatura.difesa.resistenza_ai_danni, self.mod_resistenza_ai_danni)
         return creatura
 
     # Interviene sugli attributi speciali di una creatura
@@ -77,5 +133,7 @@ class Archetipo(Serializzabile):
         creatura = self.modifica_attacco(creatura)
         creatura = self.modifica_difesa(creatura)
         creatura = self.modifica_speciale(creatura)
+        chdir(BASE_DIR.child('creature'))
         creatura.save()
+        chdir(BASE_DIR.child('archetipi'))
         return creatura
