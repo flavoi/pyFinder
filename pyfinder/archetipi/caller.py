@@ -87,8 +87,7 @@ def dettaglio_archetipo(archetipo):
         if ans == "1":
             ba = int(raw_input("Inserisci il bonus di attacco: "))
             da = int(raw_input("Inserisci i danni: "))
-            so = int(raw_input("Stabilisci se il bonus debba essere selettivo: "))
-            archetipo.aggiungi_mod_attacco(ba, da, so)
+            archetipo.aggiungi_mod_attacco(ba, da)
             print COLORS['okgreen'] + "Il bonus di attacco e` stato preparato con successo." + COLORS['endc']
         elif ans == "2":
             ca = int(raw_input("Inserisci il bonus alla classe armatura: "))
@@ -149,7 +148,11 @@ def main():
                 sc = seleziona_creatura()
                 if sc is not None:            
                     chdir(BASE_DIR.child('archetipi'))
-                    cm = so.applica_archetipo(sc)
+                    if so.mod_attacco > 0 or so.mod_danni > 0:
+                        la = raw_input("Indica gli attacchi impattati: ")
+                        # La virgola separa i singoli campi
+                        la = la.split(",")
+                    cm = so.applica_archetipo(sc, la)
                     print COLORS['okgreen'] + "Creatura %s modellata con successo" % cm + COLORS['endc']
                 else:
                     print COLORS['warning'] + "La creatura da te inserita deve ancora essere censita." + COLORS['endc']

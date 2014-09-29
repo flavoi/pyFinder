@@ -29,7 +29,6 @@ class Archetipo(Serializzabile):
         # Attributi di attacco
         self.mod_attacco = 0
         self.mod_danni = 0
-        self.selettivo = False
         # Attributi di difesa
         self.mod_classe_armatura = 0
         self.mod_punti_ferita = 0
@@ -58,10 +57,9 @@ class Archetipo(Serializzabile):
             archetipi_correnti.truncate()
 
     # Popola i dati di attacco
-    def aggiungi_mod_attacco(self, attacco, danni, selettivo):
+    def aggiungi_mod_attacco(self, attacco, danni):
         self.mod_attacco = attacco
         self.mod_danni = danni
-        self.selettivo = selettivo
 
     # Popola i dati di difesa
     def aggiungi_mod_difesa(self, classe_armatura, punti_ferita, resistenza_ai_danni):
@@ -88,9 +86,43 @@ class Archetipo(Serializzabile):
         return creatura
 
     # Interviene sugli attributi di attacco di una creatura
-    # @param selettivo: identifica se il cambiamento riguarda tutti
-    #                   gli attacchi o solo alcuni in particolare
-    def modifica_attacco(self, creatura, selettivo=False):
+    # @param selettivo: e` la lista di attacchi impattati dalla modifica
+    #                   None impatta su tutti gli attacchi della creatura
+    @staticmethod
+    def gestisci_at(creatura_at, mod_at):
+        bonus = int(creatura_at) + int(mod_at)
+        if bonus >= 0:
+            creatura_at = "+%s" % bonus
+        else:
+            creatura_at = "-%s" % bonus
+        return creatura_at
+
+    @staticmethod
+    def gestisci_dn(creatura_dn, mod_dn):
+        if creatura_dn:
+            n_dadi = creatura_dn.split("d")[0]
+            danni = creatura_dn.split("d")[1]
+            pattern = dado = bonus = None
+            if "+" in danni:
+                pattern = "+"
+            elif "-" in danni:
+                pattern = "-"
+            if pattern:
+                dado = danni.split(pattern)[0]
+                bonus = int(danni.split(pattern)[1]) + mod_dn
+            else:
+                dado = danni
+                bonus = mod_dn
+            creatura_dn = u"%sd%s" % (n_dadi,dado)
+            if bonus > 0:
+                creatura_dn += u"+%s" % bonus
+        return creatura_dn
+
+    def modifica_attacco(self, creatura, selettivo=None):
+        for attacco in creatura.attacco:
+            if attacco.nome in selettivo or selettivo[0] == '':
+                attacco.attacco = Archetipo.gestisci_at(attacco.attacco, self.mod_attacco)
+                attacco.danni = Archetipo.gestisci_dn(attacco.danni, self.mod_danni)
         return creatura
 
     # Interviene sugli attributi di difesa di una creatura
@@ -132,9 +164,9 @@ class Archetipo(Serializzabile):
 
     # La modifica degli attributi tramite archetipo e` volutamente stringente
     # @params creatura: un oggetto tipo Creatura dall'app 'creature'
-    def applica_archetipo(self, creatura):
+    def applica_archetipo(self, creatura, selettivo=None):
         creatura = self.modifica_generale(creatura)
-        creatura = self.modifica_attacco(creatura)
+        creatura = self.modifica_attacco(creatura, selettivo)
         creatura = self.modifica_difesa(creatura)
         creatura = self.modifica_speciale(creatura)
         chdir(BASE_DIR.child('creature'))
