@@ -10,6 +10,7 @@
 import json, re
 from os import chdir
 
+from pyfinder.creature.config import Speciale
 from pyfinder.config import TEMPLATESLIST, Serializzabile, BASE_DIR
 JSON_FILE = TEMPLATESLIST + '.json'
 
@@ -124,6 +125,9 @@ class Archetipo(Serializzabile):
 
     # Interviene sugli attributi speciali di una creatura
     def modifica_speciale(self, creatura):
+        for speciale in self.speciale:
+            sp = Speciale(speciale[0], speciale[1])
+            creatura.speciale.append(sp)
         return creatura
 
     # La modifica degli attributi tramite archetipo e` volutamente stringente
