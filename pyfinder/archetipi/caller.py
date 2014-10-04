@@ -48,6 +48,51 @@ def formatta_archetipi():
             tabella.add_row(riga)
     return tabella
 
+def formatta_dettaglio_archetipi(archetipo):
+    # Attributi generali
+    tabella_generale = PrettyTable(["Mod. tipo", "Mod. taglia", "Mod. allineamento", "Mod. dadi vita"])
+    if archetipo.mod_tipo or archetipo.mod_taglia or archetipo.mod_allineamento or archetipo.mod_dadi_vita: 
+        riga_generale = [
+            archetipo.mod_tipo,
+            archetipo.mod_taglia,
+            archetipo.mod_allineamento,
+            archetipo.mod_dadi_vita,
+        ]
+        tabella_generale.add_row(riga_generale)
+    else:
+        tabella_generale = COLORS['warning'] + "Non e` stato ancora definito alcun modificatore generale." + COLORS['endc']
+    # Attributi di attacco
+    tabella_attacco = PrettyTable(["Mod. attacco", "Mod. danni"])
+    if archetipo.mod_attacco or archetipo.mod_danni:
+        riga_attacco = [
+            archetipo.mod_attacco,
+            archetipo.mod_danni,
+        ]
+        tabella_attacco.add_row(riga_attacco)
+    else:
+        tabella_attacco = COLORS['warning'] + "Non e` stato ancora definito alcun modificatore di attacco." + COLORS['endc']
+    # Attributi di difesa
+    tabella_difesa = PrettyTable(["Mod. classe armatura", "Mod. punti ferita", "Mod. resistenza ai danni"])
+    if archetipo.mod_classe_armatura or archetipo.mod_punti_ferita or archetipo.mod_resistenza_ai_danni:
+        riga_difesa = [
+            archetipo.mod_classe_armatura,
+            archetipo.mod_punti_ferita,
+            archetipo.mod_resistenza_ai_danni,
+        ]
+        tabella_difesa.add_row(riga_difesa)
+    else:
+        tabella_difesa = COLORS['warning'] + "Non e` stato ancora definito alcun modificatore di difesa." + COLORS['endc']
+    # Attributi di capacita` speciali
+    tabella_speciale = PrettyTable(["Speciale", "Descrizione"])
+    if archetipo.speciale:
+        for capacita in archetipo.speciale:
+            riga_speciale = [capacita[0], capacita[1]]
+            tabella_speciale.add_row(riga_speciale)
+    else:
+        tabella_speciale = COLORS['warning'] + "Non e` stata ancora definita alcuna capacita` speciale." + COLORS['endc']
+    return (tabella_generale, tabella_attacco, tabella_difesa, tabella_speciale)    
+    
+
 """
     Seleziona una archetipo censita in base di dati tramite nome.
 """
@@ -139,21 +184,27 @@ def main():
             else:
                 print COLORS['warning'] + "L'archetipo da te inserito deve ancora essere censito." + COLORS['endc']
         elif ans == "4":
-            pass
+            chdir(BASE_DIR.child('archetipi'))
+            sa = seleziona_archetipo()
+            if sa is not None:
+                print COLORS['okgreen'] + "Selezionato archetipo %s, procedo." % sa + COLORS['endc']
+                tabelle_dettagli = formatta_dettaglio_archetipi(sa)
+                for td in tabelle_dettagli:
+                    print td
         elif ans == "5":
             chdir(BASE_DIR.child('archetipi'))
-            so = seleziona_archetipo()
-            if so is not None:
+            sa = seleziona_archetipo()
+            if sa is not None:
                 chdir(BASE_DIR.child('creature'))
                 sc = seleziona_creatura()
                 if sc is not None:            
                     chdir(BASE_DIR.child('archetipi'))
                     la = None
-                    if so.mod_attacco > 0 or so.mod_danni > 0:
+                    if sa.mod_attacco > 0 or sa.mod_danni > 0:
                         la = raw_input("Indica gli attacchi impattati: ")
                         # La virgola separa i singoli campi
                         la = la.split(",")
-                    cm = so.applica_archetipo(sc, la)
+                    cm = sa.applica_archetipo(sc, la)
                     print COLORS['okgreen'] + "Creatura %s modellata con successo" % cm + COLORS['endc']
                 else:
                     print COLORS['warning'] + "La creatura da te inserita deve ancora essere censita." + COLORS['endc']
