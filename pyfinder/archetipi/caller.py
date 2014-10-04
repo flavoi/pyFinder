@@ -84,10 +84,17 @@ def formatta_dettaglio_archetipi(archetipo):
         tabella_difesa = COLORS['warning'] + "Non e` stato ancora definito alcun modificatore di difesa." + COLORS['endc']
     # Attributi di capacita` speciali
     tabella_speciale = PrettyTable(["Speciale", "Descrizione"])
+    tabella_speciale.align["Speciale"] = "l"
+    tabella_speciale.align["Descrizione"] = "l"
     if archetipo.speciale:
         for capacita in archetipo.speciale:
-            riga_speciale = [capacita[0], capacita[1]]
-            tabella_speciale.add_row(riga_speciale)
+            nome = capacita[0].title()
+            descrizione = capacita[1].capitalize()
+            LEN = 75
+            descrizione = [descrizione[i:i+LEN] for i in range(0, len(descrizione), LEN)]
+            descrizione_formattata = "\n".join(descrizione)
+            riga = [nome, descrizione_formattata]
+            tabella_speciale.add_row(riga)
     else:
         tabella_speciale = COLORS['warning'] + "Non e` stata ancora definita alcuna capacita` speciale." + COLORS['endc']
     return (tabella_generale, tabella_attacco, tabella_difesa, tabella_speciale)    
@@ -191,6 +198,8 @@ def main():
                 tabelle_dettagli = formatta_dettaglio_archetipi(sa)
                 for td in tabelle_dettagli:
                     print td
+            else:
+                print COLORS['warning'] + "L'archetipo da te inserito deve ancora essere censito." + COLORS['endc']
         elif ans == "5":
             chdir(BASE_DIR.child('archetipi'))
             sa = seleziona_archetipo()

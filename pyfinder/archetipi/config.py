@@ -130,7 +130,7 @@ class Archetipo(Serializzabile):
     # Interviene sugli attributi di difesa di una creatura
     @staticmethod
     def gestisci_rd(creatura_rd, mod_rd):
-        if creatura_rd:
+        if creatura_rd and mod_rd:
             # Determina il valore numerico piu` vantaggioso
             num_rd = int(re.search("\d+", creatura_rd).group())
             mod_num_rd = int(re.search("\d+", mod_rd).group())
