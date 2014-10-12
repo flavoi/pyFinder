@@ -10,7 +10,7 @@ Per invocare lo script desiderato: ```python pyfinder.py <nome_app>```.
 - [x] App *personaggi*: censisce e riporta le caratteristiche dei giocatori memorizzando i loro progressi.
 - [x] App *sfide*: dispensa punti esperienza in maniera equa nel gruppo.
 - [x] App *creature*: censisce e riporta le caratteristiche di creature controllate dal game master. 
-- [ ] App *archetipi*: censisce, gestisce e assegna archetipi ad una creatura.
+- [x] App *archetipi*: censisce, gestisce e assegna archetipi ad una creatura.
 
 ### Gli attributi di un personaggio
 
