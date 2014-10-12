@@ -5,6 +5,7 @@
     Redireziona e richiama le app invocate dall'utente.
     Tutte le app installate sono riportate in config.py del pacchetto principale.
 
+    @version: 1.2
     @author: Flavio Marcato
 """
 

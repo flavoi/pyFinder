@@ -1,4 +1,9 @@
+BeautifulSoup==3.2.1
+Django==1.7
 Unipath==1.0
+jsonpickle==0.8.0
+jsonschema==0.6
 prettytable==0.7.2
+termcolor==1.1.0
 virtualenv==1.11.6
 wsgiref==0.1.2
