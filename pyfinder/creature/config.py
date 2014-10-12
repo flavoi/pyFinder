@@ -8,21 +8,11 @@
     @author: Flavio Marcato
 """
 
-from abc import ABCMeta
 import json
 
-from pyfinder.config import CREATURELIST
+from pyfinder.config import CREATURELIST, Serializzabile
 JSON_FILE = CREATURELIST + '.json'
 
-"""
-    Definisce una classe pronta per essere salvata
-    in un tracciato json.
-"""
-class Serializzabile:
-    __metaclass__ = ABCMeta
-
-    def to_json(self):
-        return self.__dict__
 
 """
     Le abilita` di offesa di una creatura.
@@ -39,6 +29,7 @@ class Attacco(Serializzabile):
     def __str__(self):
         return u"%s" % self.nome
 
+
 """
     Le abilita` di difesa di una creatura.
     Comprende sempre classe armatura, punti ferita e tiri salvezza.
@@ -46,12 +37,14 @@ class Attacco(Serializzabile):
 class Difesa(Serializzabile):
 
     # Funzione costruttrice, inizializza tutti i dati rilevanti
-    def __init__(self, classe_armatura=None, punti_ferita=None):
+    def __init__(self, classe_armatura=None, punti_ferita=None, resistenza_ai_danni=None):
         self.classe_armatura = classe_armatura
         self.punti_ferita = punti_ferita
+        self.resistenza_ai_danni = resistenza_ai_danni
 
     def __str__(self):
-        return u"%s, %s" % (self.classe_armatura, self.punti_ferita)
+        return u"%s, %s, %s" % (self.classe_armatura, self.punti_ferita, self.resistenza_ai_danni)
+
 
 """
     Le abilita` speciali di una creatura.
@@ -67,19 +60,22 @@ class Speciale(Serializzabile):
     def __str__(self):
         return u"%s" % self.nome
 
+
 """
     Una creatura del bestiario.
-    Oggetti di questo tipo sono scaricabili in un dizionario
-    tramite l'attributo __dict__.
+    Include attributi generali e di dettaglio.
 """
 class Creatura(Serializzabile):
 
     # Funzione costruttrice, inizializza tutti i dati rilevanti
-    def __init__(self, nome=None, tipo=None, grado_sfida=None):
-    	# Dati di testata
+    def __init__(self, nome=None, tipo=None, grado_sfida=None, taglia=None, allineamento=None, dadi_vita=1):
+    	# Dati generali
         self.nome = nome
     	self.tipo = tipo
     	self.grado_sfida = grado_sfida
+        self.taglia = taglia
+        self.allineamento = allineamento
+        self.dadi_vita = dadi_vita
         # Dati di dettaglio
         self.attacco = []
         self.difesa = None
@@ -91,8 +87,8 @@ class Creatura(Serializzabile):
         self.attacco.append(nuovo_attacco)
 
     # Valorizza gli attributi di difesa
-    def aggiungi_difesa(self, classe_armatura, punti_ferita):
-        self.difesa = Difesa(classe_armatura, punti_ferita)
+    def aggiungi_difesa(self, classe_armatura, punti_ferita, resistenza_ai_danni):
+        self.difesa = Difesa(classe_armatura, punti_ferita, resistenza_ai_danni)
 
     # Appende una capacita` speciale alla lista omonima
     def aggiungi_speciale(self, nome, descrizione):
@@ -102,13 +98,20 @@ class Creatura(Serializzabile):
     # Popola un'istanza a partire da un dizionario
     # I campi devono rispettare la firma del costruttore
     def autopopola(self, data):
-        self.__init__(data['nome'], data['tipo'], data['grado_sfida'])
+        self.__init__(
+            data['nome'], 
+            data['tipo'], 
+            data['grado_sfida'], 
+            data['taglia'],
+            data['allineamento'],
+            data['dadi_vita']
+        )
         if 'attacco' in data:
             for attacco in data['attacco']:
                 self.aggiungi_attacco(attacco['nome'], attacco['attacco'], attacco['danni'])
         if 'difesa' in data:
             difesa = data['difesa']
-            self.aggiungi_difesa(difesa['classe_armatura'], difesa['punti_ferita'])
+            self.aggiungi_difesa(difesa['classe_armatura'], difesa['punti_ferita'], difesa['resistenza_ai_danni'])
         if 'speciale' in data:
             for speciale in data['speciale']:
                 self.aggiungi_speciale(speciale['nome'], speciale['descrizione'])
@@ -119,6 +122,9 @@ class Creatura(Serializzabile):
             'nome': self.nome,
             'tipo': self.tipo,
             'grado_sfida': self.grado_sfida,
+            'taglia': self.taglia,
+            'allineamento': self.allineamento,
+            'dadi_vita': self.dadi_vita,
         }
         # Preparazione attacco
         attacco_json = []

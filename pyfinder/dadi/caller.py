@@ -12,8 +12,7 @@ import sys
 from random import randint
 from prettytable import PrettyTable
 
-from pyfinder.dadi.config import DADI
-
+from pyfinder.dadi.config import DADI, stampa_avviso
  
 """
     Calcola il singolo lancio.
@@ -69,7 +68,7 @@ def main():
         tabella = formatta_lanci(lanci)
         print tabella
     except ValueError, e:
-        print "Richiamare lo script con i parametri corretti."
+        stampa_avviso("Richiamare lo script con i parametri corretti.")
         print e
 
 if __name__ == '__main__':

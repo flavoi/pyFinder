@@ -21,16 +21,19 @@ def crea_nuova_creatura():
     nome = raw_input("Inserisci il nome della creatura: ")
     tipo = raw_input("Inserisci il tipo di creatura: ")
     grado_sfida = raw_input("Inserisci il grado sfida: ")
-    creatura = Creatura(nome, tipo, grado_sfida)
+    taglia = raw_input("Inserisci la taglia: ")
+    allineamento = raw_input("Inserisci l'allineamento: ")
+    dadi_vita = raw_input("Inserisci i dadi vita: ")
+    creatura = Creatura(nome, tipo, grado_sfida, taglia, allineamento, dadi_vita)
     creatura.save()
     return creatura
 
 """
-    Estrae in una tabella tutte le creature censites in base di dati.
+    Estrae in una tabella tutte le creature censite in base di dati.
 """
 def formatta_creature():
     # Registra i campi da esporre
-    tabella = PrettyTable(["Nome creatura", "Tipo", "Grado sfida"])
+    tabella = PrettyTable(["Nome creatura", "Tipo", "Grado sfida", "Taglia", "Allineamento", "Dadi vita"])
     tabella.align["Nome creatura"] = "l"
     tabella.align["Tipo"] = "l"
     tabella.padding_width = 1
@@ -41,7 +44,14 @@ def formatta_creature():
             tabella = COLORS['warning'] + "Non e` stata ancora censita alcuna creatura." + COLORS['endc']
         # Estrae le informazioni dalla base di dati
         for creatura in creature:
-            riga = [creatura['nome'].title(), creatura['tipo'], creatura['grado_sfida']]
+            riga = [
+                creatura['nome'].title(), 
+                creatura['tipo'], 
+                creatura['grado_sfida'], 
+                creatura['taglia'].upper(),
+                creatura['allineamento'].upper(),
+                creatura['dadi_vita'],
+            ]
             tabella.add_row(riga)
     return tabella
 
@@ -59,10 +69,10 @@ def formatta_dettaglio_creatura(creatura):
     else: 
         tabella_attacco = COLORS['warning'] + "Non e` stato ancora definito alcun attacco." + COLORS['endc']
     # Esponde informazioni di difesa
-    tabella_difesa = PrettyTable(["Classe armatura", "Punti ferita"])
+    tabella_difesa = PrettyTable(["Classe armatura", "Punti ferita", "Resistenza ai danni"])
     if creatura.difesa:
         difesa = creatura.difesa
-        riga = [difesa.classe_armatura, difesa.punti_ferita]
+        riga = [difesa.classe_armatura, difesa.punti_ferita, difesa.resistenza_ai_danni]
         tabella_difesa.add_row(riga)
     else:
         tabella_difesa = COLORS['warning'] + "Non e` stata ancora definita alcuna difesa." + COLORS['endc']
@@ -83,13 +93,11 @@ def formatta_dettaglio_creatura(creatura):
         tabella_speciale = COLORS['warning'] + "Non e` stata ancora definita alcuna capacita` speciale." + COLORS['endc']
     return (tabella_attacco, tabella_difesa, tabella_speciale)
 
-
-
 """
     Seleziona una creatura censita in base di dati tramite nome.
 """
 def seleziona_creatura():
-    nome_creatura = raw_input("Inserisci il nome della creatura da dettagliare: ")
+    nome_creatura = raw_input("Ricerca creatura tramite il suo nome: ")
     # Rirca in base di dati
     with open(JSON_FILE, 'r') as creature_correnti:
         creature = json.load(creature_correnti)
@@ -113,7 +121,12 @@ def seleziona_creatura():
 def dettaglio_creatura(creatura):
     while True:
         print
-        print "(1) Aggiungi attacco\n(2) Definisci difesa\n(3) Aggiungi speciale\n(e) Esci"
+        print "\
+(1) Aggiungi attacco\n\
+(2) Definisci difesa\n\
+(3) Aggiungi speciale\n\
+(e) Esci\
+"
         ans = raw_input("Inserisci attivita` %s  " % RARR)
         if ans == "1":
             na = raw_input("Inserisci il nome dell'attacco: ")
@@ -124,7 +137,8 @@ def dettaglio_creatura(creatura):
         elif ans == "2":
             ca = raw_input("Inserisci la classe armatura: ")
             pf = raw_input("Inserisci i punti ferita: ")
-            creatura.aggiungi_difesa(ca, pf)
+            rd = raw_input("Inserisci eventuale resistenza ai danni: ")
+            creatura.aggiungi_difesa(ca, pf, rd)
             print COLORS['okgreen'] + "La difesa e` stata preparata con successo." + COLORS['endc']
         elif ans == "3":
             ns = raw_input("Inserisci nome dello speciale: ")
