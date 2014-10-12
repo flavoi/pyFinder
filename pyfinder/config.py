@@ -6,8 +6,10 @@
     l'elenco delle app installate.
 """
 
+import json
 from unipath import Path
 from abc import ABCMeta
+from prettytable import PrettyTable
 
 # Raccolta corrente di giocatori
 GROUPNAME = 'atomics'
@@ -53,3 +55,30 @@ class Serializzabile:
     def to_json(self):
         return self.__dict__
 
+"""
+    Centralizza la stampa di dati in formato tabellare.
+    @params campi: lista dei campi da esporre, la singola tupla e`:
+        - il nome
+        - l'allineamento
+    @params json: la base di dati di riferimento serializzata
+    @params avviso: stampa un messaggio se la base di dati e` vuota
+"""
+def stampa_tabella(campi, nome_json, avviso):
+    # Registra i campi da esporre
+    tabella = PrettyTable(tupla[0] for tupla in campi)
+    # Allinea i campi con la relativa impostazione
+    for campo, allineamento in campi:
+        tabella.align[campo] = allineamento  
+    tabella.padding_width = 1
+    with open(nome_json, 'r') as dati_correnti:
+        dati = json.load(dati_correnti)
+        # Evidenzia eventuale base di dati vuota
+        if len(dati) == 0:
+            tabella = COLORS['warning'] + "Non e` stato ancora censito alcun personaggio." + COLORS['endc']
+        # Estrae le informazioni dalla base di dati
+        for chiave in dati:
+            riga = [chiave]
+            for chiave, valore in dati[chiave].iteritems():
+                riga.append(valore)
+            tabella.add_row(riga)
+    return tabella

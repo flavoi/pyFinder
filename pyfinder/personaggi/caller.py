@@ -8,9 +8,8 @@
 """
 
 import json, sys, random
-from prettytable import PrettyTable
 
-from pyfinder.config import RARR, COLORS
+from pyfinder.config import RARR, COLORS, stampa_tabella
 from pyfinder.personaggi.config import JSON_FILE, PersonaggioGiocante, get_group_exp
 
 
@@ -28,23 +27,13 @@ def crea_nuovo_personaggio():
     Estrae in una tabella tutti i personaggi censiti in base di dati.
 """
 def formatta_personaggi():
-    # Registra i campi da esporre
-    tabella = PrettyTable(["Giocatore", "Personaggio", "Esperienza"])
-    tabella.align["Giocatore"] = "l"
-    tabella.align["Personaggio"] = "l"
-    tabella.padding_width = 1
-    with open(JSON_FILE, 'r') as personaggi_correnti:
-        personaggi = json.load(personaggi_correnti)
-        # Evidenzia eventuale base di dati vuota
-        if len(personaggi) == 0:
-            tabella = COLORS['warning'] + "Non e` stato ancora censito alcun personaggio." + COLORS['endc']
-        # Estrae le informazioni dalla base di dati
-        for giocatore in personaggi:
-            riga = [giocatore]
-            for chiave, valore in personaggi[giocatore].iteritems():
-                riga.append(valore)
-            tabella.add_row(riga)
-    return tabella
+    campi = [
+        ("Giocatore", "l"),
+        ("Personaggio", "l"), 
+        ("Esperienza", "c"),
+    ]
+    avviso = "Non e` stato ancora censito alcun personaggio."
+    return (campi, JSON_FILE, avviso)
             
 """
     Invoca menu` principale.
@@ -59,8 +48,8 @@ def main():
             pg = crea_nuovo_personaggio()
             print COLORS['okgreen'] + "Il personaggio di %s e` stato creato con successo." % pg + COLORS['endc']
         elif ans == "2":
-            tabella_personaggi = formatta_personaggi()
-            print tabella_personaggi
+            personaggi = formatta_personaggi()
+            print stampa_tabella(*personaggi)
         elif ans == "e":
             print("Ciao!") 
             sys.exit(0)
