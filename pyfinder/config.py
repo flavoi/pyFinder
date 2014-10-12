@@ -9,8 +9,8 @@
 from unipath import Path
 from abc import ABCMeta
 
-# Raccolta corrente di giocatori
-GROUPNAME = 'atomics'
+# Raccolta corrente di personaggi
+GROUPNAME = 'personaggi'
 
 # Raccolta corrente di creature
 CREATURELIST = 'creature'
