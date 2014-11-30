@@ -10,7 +10,7 @@
 
 import json, random
 
-from pyfinder.config import GROUPNAME
+from pyfinder.config import GROUPNAME, inizializza_dati
 JSON_FILE = GROUPNAME + '.json'
 
 """
@@ -38,11 +38,14 @@ class PersonaggioGiocante:
         self.nome_giocatore = nome_giocatore
         self.nome_personaggio = nome_personaggio
         self.punti_esperienza = 0
-        with open(JSON_FILE, 'r+') as personaggi_correnti:
-            personaggi = json.load(personaggi_correnti)
-            # Allinea punti esperienza al gruppo
-            if len(personaggi) > 0:
-                self.punti_esperienza = get_group_exp(personaggi)
+        try:
+            with open(JSON_FILE, 'r') as personaggi_correnti:
+                personaggi = json.load(personaggi_correnti)
+                # Allinea punti esperienza al gruppo
+                if len(personaggi) > 0:
+                    self.punti_esperienza = get_group_exp(personaggi)
+        except IOError:
+            inizializza_dati(JSON_FILE)
 
     # Popola un'istanza a partire da una tupla, utile per caricare json
     # data[0] deve essere il nome del giocatore
@@ -58,17 +61,20 @@ class PersonaggioGiocante:
 
     # Salva il persoanggio in base di dati
     def save(self):
-        with open(JSON_FILE, 'r+') as personaggi_correnti:
-            personaggi = json.load(personaggi_correnti)
-            personaggi[self.nome_giocatore] = {
-                'nome_personaggio': self.nome_personaggio,
-                'punti_esperienza': self.punti_esperienza,
-            }
-            # Ritorna all'inizio del tracciato
-            personaggi_correnti.seek(0)  
-            # Aggiorna l'occorrenza appena preparata
-            personaggi_correnti.write(json.dumps(personaggi, indent=2, sort_keys=True))
-            personaggi_correnti.truncate()
+        try:
+            with open(JSON_FILE, 'r+') as personaggi_correnti:
+                personaggi = json.load(personaggi_correnti)
+                personaggi[self.nome_giocatore] = {
+                    'nome_personaggio': self.nome_personaggio,
+                    'punti_esperienza': self.punti_esperienza,
+                }
+                # Ritorna all'inizio del tracciato
+                personaggi_correnti.seek(0)  
+                # Aggiorna l'occorrenza appena preparata
+                personaggi_correnti.write(json.dumps(personaggi, indent=2, sort_keys=True))
+                personaggi_correnti.truncate()
+        except IOError:
+            inizializza_dati(JSON_FILE)
 
     # Dietro ogni personaggio c'e` una persona vera
     def __str__(self):

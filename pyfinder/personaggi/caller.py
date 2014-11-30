@@ -10,7 +10,7 @@
 import json, sys, random
 from prettytable import PrettyTable
 
-from pyfinder.config import RARR, COLORS
+from pyfinder.config import RARR, COLORS, inizializza_dati
 from pyfinder.personaggi.config import JSON_FILE, PersonaggioGiocante, get_group_exp
 
 
@@ -33,17 +33,21 @@ def formatta_personaggi():
     tabella.align["Giocatore"] = "l"
     tabella.align["Personaggio"] = "l"
     tabella.padding_width = 1
-    with open(JSON_FILE, 'r') as personaggi_correnti:
-        personaggi = json.load(personaggi_correnti)
-        # Evidenzia eventuale base di dati vuota
-        if len(personaggi) == 0:
-            tabella = COLORS['warning'] + "Non e` stato ancora censito alcun personaggio." + COLORS['endc']
-        # Estrae le informazioni dalla base di dati
-        for giocatore in personaggi:
-            riga = [giocatore]
-            for chiave, valore in personaggi[giocatore].iteritems():
-                riga.append(valore)
-            tabella.add_row(riga)
+    try:
+        with open(JSON_FILE, 'r') as personaggi_correnti:
+            personaggi = json.load(personaggi_correnti)
+            # Evidenzia eventuale base di dati vuota
+            if len(personaggi) == 0:
+                tabella = COLORS['warning'] + "Non e` stato ancora censito alcun personaggio." + COLORS['endc']
+            # Estrae le informazioni dalla base di dati
+            for giocatore in personaggi:
+                riga = [giocatore]
+                for chiave, valore in personaggi[giocatore].iteritems():
+                    riga.append(valore)
+                tabella.add_row(riga)
+    except IOError:
+        inizializza_dati(JSON_FILE)
+        tabella = COLORS['warning'] + "Non e` stato ancora censito alcun personaggio." + COLORS['endc']
     return tabella
             
 """

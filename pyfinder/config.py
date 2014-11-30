@@ -52,3 +52,11 @@ class Serializzabile:
 
     def to_json(self):
         return self.__dict__
+
+"""
+    Inizializza un file di dati se non presente.
+"""
+def inizializza_dati(filename):
+    f = open(filename, 'w+')
+    f.write('{}')
+    f.close()

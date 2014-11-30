@@ -10,7 +10,7 @@
 import json, sys
 from prettytable import PrettyTable
 
-from pyfinder.config import RARR, COLORS
+from pyfinder.config import RARR, COLORS, inizializza_dati
 from pyfinder.creature.config import JSON_FILE, Creatura
 
 
@@ -37,22 +37,25 @@ def formatta_creature():
     tabella.align["Nome creatura"] = "l"
     tabella.align["Tipo"] = "l"
     tabella.padding_width = 1
-    with open(JSON_FILE, 'r') as creature_correnti:
-        creature = json.load(creature_correnti)
-        # Evidenzia eventuale base di dati vuota
-        if len(creature) == 0:
-            tabella = COLORS['warning'] + "Non e` stata ancora censita alcuna creatura." + COLORS['endc']
-        # Estrae le informazioni dalla base di dati
-        for creatura in creature:
-            riga = [
-                creatura['nome'].title(), 
-                creatura['tipo'], 
-                creatura['grado_sfida'], 
-                creatura['taglia'].upper(),
-                creatura['allineamento'].upper(),
-                creatura['dadi_vita'],
-            ]
-            tabella.add_row(riga)
+    try:
+        with open(JSON_FILE, 'r') as creature_correnti:
+            creature = json.load(creature_correnti)
+            # Evidenzia eventuale base di dati vuota
+            if len(creature) == 0:
+                tabella = COLORS['warning'] + "Non e` stata ancora censita alcuna creatura." + COLORS['endc']
+            # Estrae le informazioni dalla base di dati
+            for creatura in creature:
+                riga = [
+                    creatura['nome'].title(), 
+                    creatura['tipo'], 
+                    creatura['grado_sfida'], 
+                    creatura['taglia'].upper(),
+                    creatura['allineamento'].upper(),
+                    creatura['dadi_vita'],
+                ]
+                tabella.add_row(riga)
+    except IOError:
+        inizializza_dati(JSON_FILE)
     return tabella
 
 """
@@ -98,18 +101,22 @@ def formatta_dettaglio_creatura(creatura):
 """
 def seleziona_creatura():
     nome_creatura = raw_input("Ricerca creatura tramite il suo nome: ")
-    # Rirca in base di dati
-    with open(JSON_FILE, 'r') as creature_correnti:
-        creature = json.load(creature_correnti)
-        occorrenze = [nome_creatura == creatura['nome'] for creatura in creature]
-        if 1 in occorrenze:
-            indice_creatura = occorrenze.index(1)
-            creatura_estratta = creature[indice_creatura]
-            creatura = Creatura()
-            creatura.autopopola(creatura_estratta)
-            return creatura
-        else:
-            return None
+    # Ricerca in base di dati
+    try:
+        with open(JSON_FILE, 'r') as creature_correnti:
+            creature = json.load(creature_correnti)
+            occorrenze = [nome_creatura == creatura['nome'] for creatura in creature]
+            if 1 in occorrenze:
+                indice_creatura = occorrenze.index(1)
+                creatura_estratta = creature[indice_creatura]
+                creatura = Creatura()
+                creatura.autopopola(creatura_estratta)
+                return creatura
+            else:
+                return None
+    except IOError:
+        inizializza_dati(JSON_FILE)
+        return None
 
 """
     Entra in modalita` dettaglio per una creatura selezionata.
