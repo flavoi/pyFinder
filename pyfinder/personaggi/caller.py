@@ -10,9 +10,9 @@
 import json, sys, random
 from prettytable import PrettyTable
 
-from pyfinder.config import RARR, COLORS, inizializza_dati
+from pyfinder.config import RARR, inizializza_dati
+from pyfinder.utils import formatta_avviso, formatta_successo, formatta_fallimento
 from pyfinder.personaggi.config import JSON_FILE, PersonaggioGiocante, get_group_exp
-
 
 """
     Inizializza personaggi di livello 1 con gli attributi di base.
@@ -38,7 +38,7 @@ def formatta_personaggi():
             personaggi = json.load(personaggi_correnti)
             # Evidenzia eventuale base di dati vuota
             if len(personaggi) == 0:
-                tabella = COLORS['warning'] + "Non e` stato ancora censito alcun personaggio." + COLORS['endc']
+                tabella = formatta_avviso("Non e` stato ancora censito alcun personaggio.")
             # Estrae le informazioni dalla base di dati
             for giocatore in personaggi:
                 riga = [giocatore]
@@ -47,7 +47,7 @@ def formatta_personaggi():
                 tabella.add_row(riga)
     except IOError:
         inizializza_dati(JSON_FILE)
-        tabella = COLORS['warning'] + "Non e` stato ancora censito alcun personaggio." + COLORS['endc']
+        tabella = formatta_avviso("Non e` stato ancora censito alcun personaggio.")
     return tabella
             
 """
@@ -61,7 +61,7 @@ def main():
         ans=raw_input("Inserisci attivita` %s  " % RARR) 
         if ans == "1": 
             pg = crea_nuovo_personaggio()
-            print COLORS['okgreen'] + "Il personaggio di %s e` stato creato con successo." % pg + COLORS['endc']
+            print formatta_successo("Il personaggio di %s e` stato creato con successo." % pg)
         elif ans == "2":
             tabella_personaggi = formatta_personaggi()
             print tabella_personaggi
@@ -69,7 +69,7 @@ def main():
             print("Ciao!") 
             sys.exit(0)
         else:
-            print COLORS['warning'] + "La scelta non e` valida, riprova." + COLORS['endc']
+            print formatta_avviso"La scelta non e` valida, riprova.")
 
 if __name__ == '__main__':
     main()

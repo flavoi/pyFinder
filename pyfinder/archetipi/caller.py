@@ -11,7 +11,8 @@ import json, sys
 from os import chdir
 from prettytable import PrettyTable
 
-from pyfinder.config import RARR, COLORS, BASE_DIR, inizializza_dati
+from pyfinder.config import RARR, BASE_DIR, inizializza_dati
+from pyfinder.utils import formatta_avviso, formatta_successo, formatta_fallimento
 from pyfinder.archetipi.config import JSON_FILE, Archetipo
 from pyfinder.creature.caller import seleziona_creatura
 
@@ -39,7 +40,7 @@ def formatta_archetipi():
             archetipi = json.load(archetipi_correnti)
             # Evidenzia eventuale base di dati vuota
             if len(archetipi) == 0:
-                tabella = COLORS['warning'] + "Non e` stato ancora censito alcun archetipo." + COLORS['endc']
+                tabella = formatta_avviso("Non e` stato ancora censito alcun archetipo.")
             # Estrae le informazioni dalla base di dati
             for archetipo in archetipi:
                 riga = [
@@ -63,7 +64,7 @@ def formatta_dettaglio_archetipi(archetipo):
         ]
         tabella_generale.add_row(riga_generale)
     else:
-        tabella_generale = COLORS['warning'] + "Non e` stato ancora definito alcun modificatore generale." + COLORS['endc']
+        tabella_generale = formatta_avviso("Non e` stato ancora definito alcun modificatore generale.")
     # Attributi di attacco
     tabella_attacco = PrettyTable(["Mod. attacco", "Mod. danni"])
     if archetipo.mod_attacco or archetipo.mod_danni:
@@ -73,7 +74,7 @@ def formatta_dettaglio_archetipi(archetipo):
         ]
         tabella_attacco.add_row(riga_attacco)
     else:
-        tabella_attacco = COLORS['warning'] + "Non e` stato ancora definito alcun modificatore di attacco." + COLORS['endc']
+        tabella_attacco = formatta_avviso("Non e` stato ancora definito alcun modificatore di attacco.")
     # Attributi di difesa
     tabella_difesa = PrettyTable(["Mod. classe armatura", "Mod. punti ferita", "Mod. resistenza ai danni"])
     if archetipo.mod_classe_armatura or archetipo.mod_punti_ferita or archetipo.mod_resistenza_ai_danni:
@@ -84,7 +85,7 @@ def formatta_dettaglio_archetipi(archetipo):
         ]
         tabella_difesa.add_row(riga_difesa)
     else:
-        tabella_difesa = COLORS['warning'] + "Non e` stato ancora definito alcun modificatore di difesa." + COLORS['endc']
+        tabella_difesa = formatta_avviso("Non e` stato ancora definito alcun modificatore di difesa.")
     # Attributi di capacita` speciali
     tabella_speciale = PrettyTable(["Speciale", "Descrizione"])
     tabella_speciale.align["Speciale"] = "l"
@@ -99,7 +100,7 @@ def formatta_dettaglio_archetipi(archetipo):
             riga = [nome, descrizione_formattata]
             tabella_speciale.add_row(riga)
     else:
-        tabella_speciale = COLORS['warning'] + "Non e` stata ancora definita alcuna capacita` speciale." + COLORS['endc']
+        tabella_speciale = formatta_avviso("Non e` stata ancora definita alcuna capacita` speciale.")
     return (tabella_generale, tabella_attacco, tabella_difesa, tabella_speciale)    
     
 
@@ -146,23 +147,23 @@ def dettaglio_archetipo(archetipo):
             ba = int(raw_input("Inserisci il bonus di attacco: "))
             da = int(raw_input("Inserisci i danni: "))
             archetipo.aggiungi_mod_attacco(ba, da)
-            print COLORS['okgreen'] + "Il bonus di attacco e` stato preparato con successo." + COLORS['endc']
+            print formatta_successo("Il bonus di attacco e` stato preparato con successo.")
         elif ans == "2":
             ca = int(raw_input("Inserisci il bonus alla classe armatura: "))
             pf = int(raw_input("Inserisci il bonus ai punti ferita per dado vita: "))
             rd = raw_input("Inserisci la nuova resistenza al danno: ")
             archetipo.aggiungi_mod_difesa(ca, pf, rd)
-            print COLORS['okgreen'] + "Il bonus di difesa e` stato preparato con successo." + COLORS['endc']
+            print formatta_successo("Il bonus di difesa e` stato preparato con successo.")
         elif ans == "3":
             nc = raw_input("Inserisci il nome della nuova capacita` speciale: ")
             dc = raw_input("Inserisci relativa descrizione: ")
             archetipo.aggiungi_speciale(nc, dc)
-            print COLORS['okgreen'] + "Il nuovo speciale e` stato preparato con successo." + COLORS['endc']
+            print formatta_successo("Il nuovo speciale e` stato preparato con successo.")
         elif ans == "e":
             print("Ritorno al menu` principale.")
             break
         else:
-            print COLORS['warning'] + "La scelta non e` valida, riprova." + COLORS['endc']            
+            print formatta_avviso("La scelta non e` valida, riprova.")   
     archetipo.save()
     return archetipo
 
@@ -184,28 +185,28 @@ def main():
         ans = raw_input("Inserisci attivita` %s  " % RARR)
         if ans == "1":
             ao = crea_nuovo_archetipo()
-            print COLORS['okgreen'] + "L'archetipo %s e` stato creato con successo." % ao + COLORS['endc']
+            print formatta_successo("L'archetipo %s e` stato creato con successo." % ao)
         elif ans == "2":
             tabella_archetipi = formatta_archetipi()
             print tabella_archetipi
         elif ans == "3":
             sa = seleziona_archetipo()
             if sa is not None:
-                print COLORS['okgreen'] + "Selezionato archetipo %s, procedo." % sa + COLORS['endc']
+                print formatta_successo("Selezionato archetipo %s, procedo." % sa)
                 da = dettaglio_archetipo(sa)
-                print COLORS['okgreen'] + "L'archetipo %s e` stato aggiornato con successo." % da + COLORS['endc']
+                print formatta_successo("L'archetipo %s e` stato aggiornato con successo." % da)
             else:
-                print COLORS['warning'] + "L'archetipo da te inserito deve ancora essere censito." + COLORS['endc']
+                print formatta_avviso("L'archetipo da te inserito deve ancora essere censito.")
         elif ans == "4":
             chdir(BASE_DIR.child('archetipi'))
             sa = seleziona_archetipo()
             if sa is not None:
-                print COLORS['okgreen'] + "Selezionato archetipo %s, procedo." % sa + COLORS['endc']
+                print formatta_avviso("Selezionato archetipo %s, procedo." % sa)
                 tabelle_dettagli = formatta_dettaglio_archetipi(sa)
                 for td in tabelle_dettagli:
                     print td
             else:
-                print COLORS['warning'] + "L'archetipo da te inserito deve ancora essere censito." + COLORS['endc']
+                print formatta_avviso("L'archetipo da te inserito deve ancora essere censito.")
         elif ans == "5":
             chdir(BASE_DIR.child('archetipi'))
             sa = seleziona_archetipo()
@@ -220,16 +221,16 @@ def main():
                         # La virgola separa i singoli campi
                         la = la.split(",")
                     cm = sa.applica_archetipo(sc, la)
-                    print COLORS['okgreen'] + "Creatura %s modellata con successo" % cm + COLORS['endc']
+                    print formatta_successo("Creatura %s modellata con successo" % cm)
                 else:
-                    print COLORS['warning'] + "La creatura da te inserita deve ancora essere censita." + COLORS['endc']
+                    print formatta_avviso("La creatura da te inserita deve ancora essere censita.")
             else:
-                print COLORS['warning'] + "L'archetipo da te inserito deve ancora essere censito." + COLORS['endc']
+                print formatta_avviso("L'archetipo da te inserito deve ancora essere censito.")
         elif ans == "e":
             print("Ciao!") 
             sys.exit(0)
         else:
-            print COLORS['warning'] + "La scelta non e` valida, riprova." + COLORS['endc']
+            print formatta_avviso("La scelta non e` valida, riprova.")
 
 if __name__ == '__main__':
     main()   

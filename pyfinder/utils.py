@@ -12,6 +12,10 @@ def formatta_info(messaggio):
     s = COLORS['okblue'] + messaggio + COLORS['endc']
     return s
 
+def formatta_avviso(messaggio):
+    s = COLORS['warning'] + messaggio + COLORS['endc']
+    return s
+
 def formatta_fallimento(messaggio):
     s = COLORS['fail'] + messaggio + COLORS['endc']
     return s
