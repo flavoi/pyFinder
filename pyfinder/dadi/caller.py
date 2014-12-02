@@ -13,7 +13,7 @@ from random import randint
 from prettytable import PrettyTable
 
 from pyfinder.dadi.config import DADI
-from pyfinder.config import COLORS
+from pyfinder.utils import *
 
 """
     Calcola il singolo lancio.
@@ -72,7 +72,7 @@ def main():
         tabella = formatta_lanci(lanci)
         print tabella
     except ValueError, e:
-        print COLORS['fail'] + "Richiamare lo script con i parametri corretti." + COLORS['endc'] 
+        print formatta_fallimento("Richiamare lo script con i parametri corretti.") 
         print e
         
 

@@ -11,7 +11,7 @@ import json, sys
 from os import chdir
 from prettytable import PrettyTable
 
-from pyfinder.config import RARR, COLORS, BASE_DIR
+from pyfinder.config import RARR, COLORS, BASE_DIR, inizializza_dati
 from pyfinder.archetipi.config import JSON_FILE, Archetipo
 from pyfinder.creature.caller import seleziona_creatura
 
@@ -34,18 +34,21 @@ def formatta_archetipi():
     tabella = PrettyTable(["Nome archetipo", "Grado sfida"])
     tabella.align["Nome archetipo"] = "l"
     tabella.padding_width = 1
-    with open(JSON_FILE, 'r') as archetipi_correnti:
-        archetipi = json.load(archetipi_correnti)
-        # Evidenzia eventuale base di dati vuota
-        if len(archetipi) == 0:
-            tabella = COLORS['warning'] + "Non e` stato ancora censito alcun archetipo." + COLORS['endc']
-        # Estrae le informazioni dalla base di dati
-        for archetipo in archetipi:
-            riga = [
-                archetipo['nome_archetipo'].title(),
-                archetipo['mod_grado_sfida'],
-            ]
-            tabella.add_row(riga)
+    try:
+        with open(JSON_FILE, 'r') as archetipi_correnti:
+            archetipi = json.load(archetipi_correnti)
+            # Evidenzia eventuale base di dati vuota
+            if len(archetipi) == 0:
+                tabella = COLORS['warning'] + "Non e` stato ancora censito alcun archetipo." + COLORS['endc']
+            # Estrae le informazioni dalla base di dati
+            for archetipo in archetipi:
+                riga = [
+                    archetipo['nome_archetipo'].title(),
+                    archetipo['mod_grado_sfida'],
+                ]
+                tabella.add_row(riga)
+    except IOError:
+        inizializza_dati(JSON_FILE)
     return tabella
 
 def formatta_dettaglio_archetipi(archetipo):
@@ -105,19 +108,22 @@ def formatta_dettaglio_archetipi(archetipo):
 """
 def seleziona_archetipo():
     nome_archetipo = raw_input("Ricerca archetipo tramite il suo nome: ")
-    # Rirca in base di dati
-    with open(JSON_FILE, 'r') as archetipi_correnti:
-        archetipi = json.load(archetipi_correnti)
-        occorrenze = [nome_archetipo == archetipo['nome_archetipo'] for archetipo in archetipi]
-        if 1 in occorrenze:
-            indice_archetipo = occorrenze.index(1)
-            archetipo_estratto = archetipi[indice_archetipo]
-            # Ricostruisce un'istanza di archetipo
-            archetipo = Archetipo(nome_archetipo)
-            archetipo.__dict__.update(archetipo_estratto)
-            return archetipo
-        else:
-            return None
+    # Ricerca in base di dati
+    try:
+        with open(JSON_FILE, 'r') as archetipi_correnti:
+            archetipi = json.load(archetipi_correnti)
+            occorrenze = [nome_archetipo == archetipo['nome_archetipo'] for archetipo in archetipi]
+            if 1 in occorrenze:
+                indice_archetipo = occorrenze.index(1)
+                archetipo_estratto = archetipi[indice_archetipo]
+                # Ricostruisce un'istanza di archetipo
+                archetipo = Archetipo(nome_archetipo)
+                archetipo.__dict__.update(archetipo_estratto)
+                return archetipo
+            else:
+                return None
+    except IOError:
+        inizializza_dati(JSON_FILE)
 
 """
     Entra in modalita` dettaglio per un archetipo selezionato.
