@@ -69,7 +69,7 @@ def main():
             print("Ciao!") 
             sys.exit(0)
         else:
-            print formatta_avviso"La scelta non e` valida, riprova.")
+            print formatta_avviso("La scelta non e` valida, riprova.")
 
 if __name__ == '__main__':
     main()
