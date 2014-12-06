@@ -14,20 +14,7 @@ from os import chdir, system
 from os.path import basename as scriptname
 
 from config import BASE_DIR, INSTALLED_APPS, COLORS
-
-"""
-    Messaggio di benvenuto.
-"""
-def stampa_benvenuto(appname):
-    print COLORS['okblue'] + "Applicazione '%s' attivata." % appname,
-    print COLORS['endc']
-
-"""
-    Messaggio d'errore.
-"""
-def stampa_fallimento(appname):
-    print COLORS['fail'] + "Applicazione '%s' non installata." % appname,
-    print COLORS['endc']
+from utils import formatta_avviso, formatta_fallimento, formatta_info
 
 """
     Invoca il programma principale.
@@ -35,11 +22,14 @@ def stampa_fallimento(appname):
 """
 def main(requested_app):
     if requested_app in INSTALLED_APPS:
-        stampa_benvenuto(requested_app)
+        msg = "Applicazione %s attivata." % requested_app
+        print formatta_info(msg)
         chdir(BASE_DIR.child(requested_app))
         system("python caller.py")
     else:
-        stampa_fallimento(requested_app)
+        msg = "Applicazione %s non installata." % requested_app
+        print formatta_fallimento(msg)
+        print "App supportate: %s" % [app for app in INSTALLED_APPS]
         sys.exit(1) 
 
 if __name__ == "__main__":
