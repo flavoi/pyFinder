@@ -8,6 +8,7 @@
 
 from unipath import Path
 from abc import ABCMeta
+from os import name
 
 # Raccolta corrente di personaggi
 GROUPNAME = 'personaggi'
@@ -22,7 +23,11 @@ TEMPLATESLIST = 'archetipi'
 BASE_DIR = Path(__file__).ancestor(1)
 
 # Simbolo freccia verso destra
-RARR = "\xe2\x9e\x9c"
+# Disattivata in ambiente windows
+if os.name == 'nt':
+    RARR = "\xe2\x9e\x9c"
+else:
+    RARR = ": "
 
 # Colori per la riga di comando
 COLORS = {
