@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).ancestor(1)
 
 # Simbolo freccia verso destra
 # Disattivata in ambiente windows
-if os.name == 'nt':
+if name == 'nt':
     RARR = "\xe2\x9e\x9c"
 else:
     RARR = ": "
