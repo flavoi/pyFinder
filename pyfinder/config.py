@@ -24,21 +24,10 @@ BASE_DIR = Path(__file__).ancestor(1)
 
 # Simbolo freccia verso destra
 # Disattivata in ambiente windows
-if name == 'nt':
+if name != 'nt':
     RARR = "\xe2\x9e\x9c"
 else:
     RARR = ": "
-
-# Colori per la riga di comando
-COLORS = {
-    'header': '\033[95m',
-    'bold': "\033[1m",
-    'okblue': '\033[94m',
-    'okgreen': '\033[92m',
-    'warning': '\033[93m',
-    'fail': '\033[91m',
-    'endc': '\033[0m',
-}
 
 # Applicazioni installate
 INSTALLED_APPS = [

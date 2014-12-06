@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from config import COLORS
+from colorama import Fore, Back, Style
 
 """
     La seguente serie di funzioni formattano il colore dei
@@ -9,17 +9,17 @@ from config import COLORS
 """
 
 def formatta_info(messaggio):
-    s = COLORS['okblue'] + messaggio + COLORS['endc']
+    s = Style.DIM + messaggio + Style.RESET_ALL
     return s
 
 def formatta_avviso(messaggio):
-    s = COLORS['warning'] + messaggio + COLORS['endc']
+    s = Fore.YELLOW + messaggio + Fore.RESET
     return s
 
 def formatta_fallimento(messaggio):
-    s = COLORS['fail'] + messaggio + COLORS['endc']
+    s = Fore.RED + messaggio + Fore.RESET
     return s
 
 def formatta_successo(messaggio):
-    s = COLORS['okgreen'] + messaggio + COLORS['endc']
+    s = Fore.GREEN + messaggio + Fore.RESET
     return s
