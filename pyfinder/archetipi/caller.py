@@ -201,7 +201,7 @@ def main():
             chdir(BASE_DIR.child('archetipi'))
             sa = seleziona_archetipo()
             if sa is not None:
-                print formatta_avviso("Selezionato archetipo %s, procedo." % sa)
+                print formatta_successo("Selezionato archetipo %s, procedo." % sa)
                 tabelle_dettagli = formatta_dettaglio_archetipi(sa)
                 for td in tabelle_dettagli:
                     print td
