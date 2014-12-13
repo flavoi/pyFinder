@@ -1,7 +1,7 @@
 pyFinder
 ========
 
-Questo pacchetto vuole essere un piccolo coltellino svizzero per organizzare le sessioni di gioco. 
+Questo pacchetto vuole essere un piccolo coltellino svizzero da Game Master per organizzare le sessioni di gioco. 
 
 ## Installazione
 - Assicuriamoci di aver installato la versione 2.x di Python
