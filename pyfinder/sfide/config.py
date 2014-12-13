@@ -23,7 +23,7 @@ class Sfida:
 
     # Accesso al nome della sfida
     def get_nome_sfida(self):
-        return self.nome_sfida
+        return self.nome_sfida.capitalize()
 
     # Accesso ai punti esperienza della sfida
     def get_punti_sfida(self):
