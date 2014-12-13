@@ -12,22 +12,13 @@
 import sys
 from os import chdir, system
 from os.path import basename as scriptname
+from colorama import init
+init()
 
-from config import BASE_DIR, INSTALLED_APPS, COLORS
+from config import BASE_DIR, INSTALLED_APPS
+from utils import formatta_avviso, formatta_fallimento, formatta_info
 
-"""
-    Messaggio di benvenuto.
-"""
-def stampa_benvenuto(appname):
-    print COLORS['okblue'] + "Applicazione '%s' attivata." % appname,
-    print COLORS['endc']
-
-"""
-    Messaggio d'errore.
-"""
-def stampa_fallimento(appname):
-    print COLORS['fail'] + "Applicazione '%s' non installata." % appname,
-    print COLORS['endc']
+INFO = "App supportate: %s" % [app for app in INSTALLED_APPS]
 
 """
     Invoca il programma principale.
@@ -35,20 +26,23 @@ def stampa_fallimento(appname):
 """
 def main(requested_app):
     if requested_app in INSTALLED_APPS:
-        stampa_benvenuto(requested_app)
+        msg = "Applicazione %s attivata." % requested_app
+        print formatta_info(msg)
         chdir(BASE_DIR.child(requested_app))
         system("python caller.py")
     else:
-        stampa_fallimento(requested_app)
+        msg = "Applicazione %s non installata." % requested_app
+        print formatta_fallimento(msg)
+        print formatta_info(INFO)
         sys.exit(1) 
 
 if __name__ == "__main__":
     # Verifica parametri di ingresso
     try:
         if len(sys.argv) <= 1:
-            raise ValueError("App supportate: %s" % [app for app in INSTALLED_APPS])
+            raise ValueError(INFO)
     except ValueError, e:
-        print "Richiamare lo script con i parametri corretti.\npython %s <nome_app>" % scriptname(__file__)
+        print formatta_avviso("Richiamare lo script con i parametri corretti.\npython %s <nome_app>") % scriptname(__file__)
         print e
         sys.exit(1)
     # Lettura app desiderata

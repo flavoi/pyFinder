@@ -12,8 +12,9 @@ import sys
 from random import randint
 from prettytable import PrettyTable
 
-from pyfinder.dadi.config import DADI, stampa_avviso
- 
+from pyfinder.dadi.config import DADI
+from pyfinder.utils import *
+
 """
     Calcola il singolo lancio.
     I parametri obbligatori sono il tipo di dado e il modificatore di competenza. 
@@ -58,8 +59,11 @@ def main():
         if tipo_dado not in DADI:
             raise ValueError("Specificare un tipo di dado previsto. \n%s" % [dado for dado in DADI])
         tipo_dado = int(tipo_dado)
-        modificatore = int(raw_input('Modificatore al tiro: '))
-        ripetizioni = int(raw_input('Ripetizioni: '))
+        try:
+            modificatore = int(raw_input('Modificatore al tiro: '))
+            ripetizioni = int(raw_input('Ripetizioni: '))
+        except ValueError:
+            raise ValueError("Assicurarsi di imputare un numero razionale.")
         # Lancio dei dadi
         # Prevede la specifica di lanci speciali, di default invoca un
         # lancio comune (standard_roll)
@@ -68,8 +72,9 @@ def main():
         tabella = formatta_lanci(lanci)
         print tabella
     except ValueError, e:
-        stampa_avviso("Richiamare lo script con i parametri corretti.")
+        print formatta_fallimento("Richiamare lo script con i parametri corretti.") 
         print e
+        
 
 if __name__ == '__main__':
     main()

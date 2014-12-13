@@ -1,7 +1,15 @@
 pyFinder
 ========
 
-Questo pacchetto vuole essere un piccolo coltellino svizzero per organizzare le sessioni di gioco. 
+Questo pacchetto vuole essere un piccolo coltellino svizzero da Game Master per organizzare le sessioni di gioco. 
+
+## Installazione
+- Assicuriamoci di aver installato la versione 2.x di Python
+- Installiamo pip per risolvere le dipendenze necessarie
+- Installiamo git per scaricare l'ultima versione del software
+- Cloniamo il pacchetto sulla nostra macchina: git clone https://github.com/flavoi/pyFinder.git
+- Installiamo le dipendenze necessarie: cd pyfinder && pip install -r requirements.txt​
+​- Il giocattolo è pronto per essere testato :-) 
 
 ## Funzionalità incluse
 

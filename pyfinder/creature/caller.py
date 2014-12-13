@@ -10,7 +10,8 @@
 import json, sys
 from prettytable import PrettyTable
 
-from pyfinder.config import RARR, COLORS
+from pyfinder.config import RARR, inizializza_dati
+from pyfinder.utils import formatta_avviso, formatta_successo, formatta_fallimento
 from pyfinder.creature.config import JSON_FILE, Creatura
 
 
@@ -37,22 +38,25 @@ def formatta_creature():
     tabella.align["Nome creatura"] = "l"
     tabella.align["Tipo"] = "l"
     tabella.padding_width = 1
-    with open(JSON_FILE, 'r') as creature_correnti:
-        creature = json.load(creature_correnti)
-        # Evidenzia eventuale base di dati vuota
-        if len(creature) == 0:
-            tabella = COLORS['warning'] + "Non e` stata ancora censita alcuna creatura." + COLORS['endc']
-        # Estrae le informazioni dalla base di dati
-        for creatura in creature:
-            riga = [
-                creatura['nome'].title(), 
-                creatura['tipo'], 
-                creatura['grado_sfida'], 
-                creatura['taglia'].upper(),
-                creatura['allineamento'].upper(),
-                creatura['dadi_vita'],
-            ]
-            tabella.add_row(riga)
+    try:
+        with open(JSON_FILE, 'r') as creature_correnti:
+            creature = json.load(creature_correnti)
+            # Evidenzia eventuale base di dati vuota
+            if len(creature) == 0:
+                tabella = formatta_avviso("Non e` stata ancora censita alcuna creatura.")
+            # Estrae le informazioni dalla base di dati
+            for creatura in creature:
+                riga = [
+                    creatura['nome'].title(), 
+                    creatura['tipo'], 
+                    creatura['grado_sfida'], 
+                    creatura['taglia'].upper(),
+                    creatura['allineamento'].upper(),
+                    creatura['dadi_vita'],
+                ]
+                tabella.add_row(riga)
+    except IOError:
+        inizializza_dati(JSON_FILE)
     return tabella
 
 """
@@ -67,7 +71,7 @@ def formatta_dettaglio_creatura(creatura):
             riga = [attacco.nome.title(), attacco.attacco, attacco.danni]
             tabella_attacco.add_row(riga)
     else: 
-        tabella_attacco = COLORS['warning'] + "Non e` stato ancora definito alcun attacco." + COLORS['endc']
+        tabella_attacco = formatta_avviso("Non e` stato ancora definito alcun attacco.")
     # Esponde informazioni di difesa
     tabella_difesa = PrettyTable(["Classe armatura", "Punti ferita", "Resistenza ai danni"])
     if creatura.difesa:
@@ -75,7 +79,7 @@ def formatta_dettaglio_creatura(creatura):
         riga = [difesa.classe_armatura, difesa.punti_ferita, difesa.resistenza_ai_danni]
         tabella_difesa.add_row(riga)
     else:
-        tabella_difesa = COLORS['warning'] + "Non e` stata ancora definita alcuna difesa." + COLORS['endc']
+        tabella_difesa = formatta_avviso("Non e` stata ancora definita alcuna difesa.")
     # Esponde informazioni di capacita` speciali
     tabella_speciale = PrettyTable(["Speciale", "Descrizione"])
     tabella_speciale.align["Speciale"] = "l"
@@ -90,7 +94,7 @@ def formatta_dettaglio_creatura(creatura):
             riga = [speciale.nome.title(), descrizione_formattata]
             tabella_speciale.add_row(riga)
     else:
-        tabella_speciale = COLORS['warning'] + "Non e` stata ancora definita alcuna capacita` speciale." + COLORS['endc']
+        tabella_speciale = formatta_avviso("Non e` stata ancora definita alcuna capacita` speciale.")
     return (tabella_attacco, tabella_difesa, tabella_speciale)
 
 """
@@ -98,18 +102,22 @@ def formatta_dettaglio_creatura(creatura):
 """
 def seleziona_creatura():
     nome_creatura = raw_input("Ricerca creatura tramite il suo nome: ")
-    # Rirca in base di dati
-    with open(JSON_FILE, 'r') as creature_correnti:
-        creature = json.load(creature_correnti)
-        occorrenze = [nome_creatura == creatura['nome'] for creatura in creature]
-        if 1 in occorrenze:
-            indice_creatura = occorrenze.index(1)
-            creatura_estratta = creature[indice_creatura]
-            creatura = Creatura()
-            creatura.autopopola(creatura_estratta)
-            return creatura
-        else:
-            return None
+    # Ricerca in base di dati
+    try:
+        with open(JSON_FILE, 'r') as creature_correnti:
+            creature = json.load(creature_correnti)
+            occorrenze = [nome_creatura == creatura['nome'] for creatura in creature]
+            if 1 in occorrenze:
+                indice_creatura = occorrenze.index(1)
+                creatura_estratta = creature[indice_creatura]
+                creatura = Creatura()
+                creatura.autopopola(creatura_estratta)
+                return creatura
+            else:
+                return None
+    except IOError:
+        inizializza_dati(JSON_FILE)
+        return None
 
 """
     Entra in modalita` dettaglio per una creatura selezionata.
@@ -133,23 +141,23 @@ def dettaglio_creatura(creatura):
             ba = raw_input("Inserisci il bonus di attacco: ")
             da = raw_input("Inserisci i danni: ")
             creatura.aggiungi_attacco(na, ba, da)
-            print COLORS['okgreen'] + "Il nuovo attacco e` stato preparato con successo." + COLORS['endc']
+            print formatta_successo("Il nuovo attacco e` stato preparato con successo.")
         elif ans == "2":
             ca = raw_input("Inserisci la classe armatura: ")
             pf = raw_input("Inserisci i punti ferita: ")
             rd = raw_input("Inserisci eventuale resistenza ai danni: ")
             creatura.aggiungi_difesa(ca, pf, rd)
-            print COLORS['okgreen'] + "La difesa e` stata preparata con successo." + COLORS['endc']
+            print formatta_successo("La difesa e` stata preparata con successo.")
         elif ans == "3":
             ns = raw_input("Inserisci nome dello speciale: ")
             ds = raw_input("Inserisci la descrizione: ")
             creatura.aggiungi_speciale(ns, ds)
-            print COLORS['okgreen'] + "Il nuovo speciale e` stato preparato con successo." + COLORS['endc']
+            print formatta_successo("Il nuovo speciale e` stato preparato con successo.")
         elif ans == "e":
             print("Ritorno al menu` principale.")
             break
         else:
-            print COLORS['warning'] + "La scelta non e` valida, riprova." + COLORS['endc']
+            print formatta_avviso("La scelta non e` valida, riprova.")
     creatura.save()
     return creatura
 
@@ -170,32 +178,32 @@ def main():
         ans = raw_input("Inserisci attivita` %s  " % RARR) 
         if ans == "1": 
             ca = crea_nuova_creatura()
-            print COLORS['okgreen'] + "La creatura %s e` stato creata con successo." % ca + COLORS['endc']
+            print formatta_successo("La creatura %s e` stato creata con successo." % ca)
         elif ans == "2":
             tabella_creature = formatta_creature()
             print tabella_creature
         elif ans == "3":
             sc = seleziona_creatura()
             if sc is not None:
-                print COLORS['okgreen'] + "Selezionata creatura %s, procedo." % sc + COLORS['endc']
+                print formatta_successo("Selezionata creatura %s, procedo." % sc)
                 dc = dettaglio_creatura(sc)
-                print COLORS['okgreen'] + "La creatura %s e` stato aggiornata con successo." % dc + COLORS['endc']
+                print formatta_successo("La creatura %s e` stato aggiornata con successo." % dc)
             else:
-                print COLORS['warning'] + "La creatura da te inserita deve ancora essere censita." + COLORS['endc']
+                print formatta_avviso("La creatura da te inserita deve ancora essere censita.")
         elif ans == "4":
             sc = seleziona_creatura()
             if sc is not None:
-                print COLORS['okgreen'] + "Selezionata creatura %s, procedo." % sc + COLORS['endc']
+                print formatta_successo("Selezionata creatura %s, procedo." % sc)
                 tabelle_dettagli = formatta_dettaglio_creatura(sc)
                 for td in tabelle_dettagli:
                     print td
             else:
-                print COLORS['warning'] + "La creatura da te inserita deve ancora essere censita." + COLORS['endc']
+                print formatta_avviso("La creatura da te inserita deve ancora essere censita.")
         elif ans == "e":
             print("Ciao!") 
             sys.exit(0)
         else:
-            print COLORS['warning'] + "La scelta non e` valida, riprova." + COLORS['endc']
+            print formatta_avviso("La scelta non e` valida, riprova.")
 
 if __name__ == '__main__':
     main()    

@@ -8,6 +8,7 @@
 
 from unipath import Path
 from abc import ABCMeta
+from os import name
 
 # Raccolta corrente di personaggi
 GROUPNAME = 'personaggi'
@@ -22,18 +23,11 @@ TEMPLATESLIST = 'archetipi'
 BASE_DIR = Path(__file__).ancestor(1)
 
 # Simbolo freccia verso destra
-RARR = "\xe2\x9e\x9c"
-
-# Colori per la riga di comando
-COLORS = {
-    'header': '\033[95m',
-    'bold': "\033[1m",
-    'okblue': '\033[94m',
-    'okgreen': '\033[92m',
-    'warning': '\033[93m',
-    'fail': '\033[91m',
-    'endc': '\033[0m',
-}
+# Disattivata in ambiente windows
+if name != 'nt':
+    RARR = "\xe2\x9e\x9c"
+else:
+    RARR = ": "
 
 # Applicazioni installate
 INSTALLED_APPS = [
@@ -52,3 +46,11 @@ class Serializzabile:
 
     def to_json(self):
         return self.__dict__
+
+"""
+    Inizializza un file di dati se non presente.
+"""
+def inizializza_dati(filename):
+    f = open(filename, 'w+')
+    f.write('{}')
+    f.close()

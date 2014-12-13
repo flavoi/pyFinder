@@ -12,7 +12,8 @@
 import os, sys, json
 from prettytable import PrettyTable
 
-from pyfinder.config import BASE_DIR, COLORS, RARR
+from pyfinder.config import BASE_DIR, RARR
+from pyfinder.utils import formatta_avviso, formatta_successo, formatta_fallimento
 from pyfinder.personaggi.config import JSON_FILE, PersonaggioGiocante
 from pyfinder.sfide.config import Sfida
 
@@ -48,7 +49,7 @@ def formatta_sfide(sfide):
             riga = [sfida.get_nome_sfida(), sfida.get_punti_sfida()]
             tabella.add_row(riga)
     else:
-        tabella = COLORS['warning'] + "Nessuna sfida censita." + COLORS['endc']
+        tabella = formatta_avviso("Nessuna sfida censita.")
     return tabella
 
 """
@@ -93,7 +94,7 @@ def main():
         if ans == "1":
             nuova_sfida = crea_nuova_sfida()
             sfide.append(nuova_sfida)
-            print COLORS['okgreen'] + "Sfida '%s' creata con successo." % nuova_sfida + COLORS['endc']
+            print formatta_successo("Sfida '%s' creata con successo." % nuova_sfida)
 
         elif ans == "2":
             tabella_sfide = formatta_sfide(sfide)
@@ -102,9 +103,9 @@ def main():
         elif ans == "3":
             pe = assegna_punti_esperienza(sfide)
             if pe:
-                print COLORS['okgreen'] + "%s punti esperienza assegnati con successo ad ogni personaggio." % pe + COLORS['endc']
+                print formatta_successo("%s punti esperienza assegnati con successo ad ogni personaggio." % pe)
             else:
-                print COLORS['warning'] + "Non ci sono punti esperienza da assegnare." + COLORS['endc']
+                print formatta_avviso("Non ci sono punti esperienza da assegnare.")
             # Resetta le sfide una volta consumate
             sfide = []
 
@@ -113,7 +114,7 @@ def main():
             sys.exit(0)
         
         else:
-            print COLORS['warning'] + "La scelta non e` valida, riprova." + COLORS['endc']
+            print formatta_avviso("La scelta non e` valida, riprova.")
 
 if __name__ == '__main__':
     main()

@@ -1,4 +1,4 @@
 Unipath==1.0
+colorama==0.3.2
 prettytable==0.7.2
-virtualenv==1.11.6
 wsgiref==0.1.2

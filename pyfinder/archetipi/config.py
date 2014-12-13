@@ -40,22 +40,25 @@ class Archetipo(Serializzabile):
     # E` possibile entrare in modifica creando un archetipo con 
     # nome gia` censito
     def save(self):
-        with open(JSON_FILE, 'r+') as archetipi_correnti:
-            archetipi = json.load(archetipi_correnti)
-            archetipo_corrente = self.to_json()
-            # Cerca occorrenza di un archetipo gia` presente
-            e_nuova_occorrenza = True
-            for n,i in enumerate(archetipi):
-                if i['nome_archetipo'] == archetipo_corrente['nome_archetipo']:
-                    archetipi[n] = archetipo_corrente
-                    e_nuova_occorrenza = False
-            # Se rilevata come nuova occorrenza, la appende alle esistenti
-            if e_nuova_occorrenza:
-                archetipi.append(archetipo_corrente)
-            archetipi_correnti.seek(0)
-            archetipi_correnti.write(json.dumps(archetipi, indent=2, sort_keys=True))
-            archetipi_correnti.truncate()
-
+        try:
+            with open(JSON_FILE, 'r+') as archetipi_correnti:
+                archetipi = json.load(archetipi_correnti)
+                archetipo_corrente = self.to_json()
+                # Cerca occorrenza di un archetipo gia` presente
+                e_nuova_occorrenza = True
+                for n,i in enumerate(archetipi):
+                    if i['nome_archetipo'] == archetipo_corrente['nome_archetipo']:
+                        archetipi[n] = archetipo_corrente
+                        e_nuova_occorrenza = False
+                # Se rilevata come nuova occorrenza, la appende alle esistenti
+                if e_nuova_occorrenza:
+                    archetipi.append(archetipo_corrente)
+                archetipi_correnti.seek(0)
+                archetipi_correnti.write(json.dumps(archetipi, indent=2, sort_keys=True))
+                archetipi_correnti.truncate()
+        except IOError:
+            inizializza_dati(JSON_FILE)
+    
     # Popola i dati di attacco
     def aggiungi_mod_attacco(self, attacco, danni):
         self.mod_attacco = attacco
