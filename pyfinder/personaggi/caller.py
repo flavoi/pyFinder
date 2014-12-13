@@ -43,7 +43,7 @@ def formatta_personaggi():
             for giocatore in personaggi:
                 riga = [giocatore]
                 for chiave, valore in personaggi[giocatore].iteritems():
-                    riga.append(valore)
+                    riga.append(str(valore).title())
                 tabella.add_row(riga)
     except IOError:
         inizializza_dati(JSON_FILE)
