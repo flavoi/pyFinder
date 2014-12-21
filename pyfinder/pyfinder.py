@@ -12,8 +12,7 @@
 import sys
 from os import chdir, system
 from os.path import basename as scriptname
-from colorama import init
-init()
+from colorama import init as colorama_init
 
 from config import BASE_DIR, INSTALLED_APPS
 from utils import formatta_avviso, formatta_fallimento, formatta_info
@@ -37,7 +36,7 @@ def main(requested_app):
         sys.exit(1) 
 
 if __name__ == "__main__":
-    # Verifica parametri di ingresso
+    # Verifica parametri di ingresso   
     try:
         if len(sys.argv) <= 1:
             raise ValueError(INFO)

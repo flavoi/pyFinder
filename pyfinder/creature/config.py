@@ -10,7 +10,7 @@
 
 import json
 
-from pyfinder.config import CREATURELIST, Serializzabile
+from pyfinder.config import CREATURELIST, Serializzabile, inizializza_dati
 JSON_FILE = CREATURELIST + '.json'
 
 
@@ -148,21 +148,24 @@ class Creatura(Serializzabile):
     # E` possibile entrare in modifica creando una creatura con 
     # nome gia` censito
     def save(self):
-        with open(JSON_FILE, 'r+') as creature_correnti:
-            creature = json.load(creature_correnti)
-            creatura_corrente = self.to_json()
-            # Cerca occorrenza di una creatura gia` presente
-            e_nuova_creatura = True
-            for n,i in enumerate(creature):
-                if i['nome'] == creatura_corrente['nome']:
-                    creature[n] = creatura_corrente
-                    e_nuova_creatura = False
-            # Se rilevata come nuova creatura, la appende alle esistenti
-            if e_nuova_creatura:
-                creature.append(creatura_corrente)
-            creature_correnti.seek(0)
-            creature_correnti.write(json.dumps(creature, indent=2, sort_keys=True))
-            creature_correnti.truncate()
+        try:
+            with open(JSON_FILE, 'r+') as creature_correnti:
+                creature = json.load(creature_correnti)
+                creatura_corrente = self.to_json()
+                # Cerca occorrenza di una creatura gia` presente
+                e_nuova_creatura = True
+                for n,i in enumerate(creature):
+                    if i['nome'] == creatura_corrente['nome']:
+                        creature[n] = creatura_corrente
+                        e_nuova_creatura = False
+                # Se rilevata come nuova creatura, la appende alle esistenti
+                if e_nuova_creatura:
+                    creature.append(creatura_corrente)
+                creature_correnti.seek(0)
+                creature_correnti.write(json.dumps(creature, indent=2, sort_keys=True))
+                creature_correnti.truncate()
+        except IOError:
+            inizializza_dati(filename=JSON_FILE, symbol='[]')
 
     # Stampa una creatura 
     def __str__(self):
