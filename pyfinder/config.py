@@ -50,7 +50,7 @@ class Serializzabile:
 """
     Inizializza un file di dati se non presente.
 """
-def inizializza_dati(filename):
+def inizializza_dati(filename, symbol='{}'):
     f = open(filename, 'w+')
-    f.write('{}')
+    f.write(symbol)
     f.close()
