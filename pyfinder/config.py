@@ -13,6 +13,9 @@ from os import name
 # Raccolta corrente di personaggi
 GROUPNAME = 'personaggi'
 
+# Percorso gruppo di gioco
+GROUPDIR = '/Users/Flavio/Desktop'
+
 # Raccolta corrente di creature
 CREATURELIST = 'creature'
 
