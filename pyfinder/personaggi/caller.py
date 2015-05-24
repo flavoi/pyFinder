@@ -7,10 +7,11 @@
     @author: Flavio Marcato
 """
 
-import json, sys, random
+from shutil import copyfile
+import json, sys, random, os
 from prettytable import PrettyTable
 
-from pyfinder.config import RARR, inizializza_dati
+from pyfinder.config import RARR, GROUPDIR, inizializza_dati
 from pyfinder.utils import formatta_avviso, formatta_successo, formatta_fallimento
 from pyfinder.personaggi.config import JSON_FILE, PersonaggioGiocante, get_group_exp
 
@@ -49,7 +50,17 @@ def formatta_personaggi():
         inizializza_dati(JSON_FILE)
         tabella = formatta_avviso("Non e` stato ancora censito alcun personaggio.")
     return tabella
-            
+
+
+"""
+    Copia il file dei personaggi sul percorso specificato nelle configurazionei.
+"""
+def esporta_personaggi():
+    percorso_destinazione = os.path.join(GROUPDIR, JSON_FILE)
+    if GROUPDIR != '':
+        copyfile(JSON_FILE, percorso_destinazione)        
+    return percorso_destinazione
+
 """
     Invoca menu` principale.
 """
@@ -57,7 +68,7 @@ def main():
     ans = True
     while ans:
         print
-        print "(1) Crea un nuovo personaggio\n(2) Stampa tutti i personaggi\n(e) Esci"
+        print "(1) Crea un nuovo personaggio\n(2) Stampa tutti i personaggi\n(3) Esporta i personaggi\n(e) Esci"
         ans=raw_input("Inserisci attivita` %s  " % RARR) 
         if ans == "1": 
             pg = crea_nuovo_personaggio()
@@ -65,6 +76,9 @@ def main():
         elif ans == "2":
             tabella_personaggi = formatta_personaggi()
             print tabella_personaggi
+        elif ans == "3":
+            destinazione = esporta_personaggi()
+            print formatta_successo("Personaggi copiati in %s" % destinazione)
         elif ans == "e":
             print("Ciao!") 
             sys.exit(0)
