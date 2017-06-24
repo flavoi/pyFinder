@@ -1,5 +1,4 @@
-pyFinder
-========
+# pyfinder
 
 Questo pacchetto vuole essere un piccolo coltellino svizzero da Game Master per organizzare le sessioni di gioco. 
 
